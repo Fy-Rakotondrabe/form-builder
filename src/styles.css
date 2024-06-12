@@ -1,0 +1,26 @@
+.layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  border-right: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.dropzone {
+  background-color: #f0f0f0;
+  height: 100vh;
+  flex-grow: 1;
+}
+
+.item-properties {
+  width: 300px;
+  height: 100vh;
+  border-left: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
