@@ -44,7 +44,7 @@ const DropZone = () => {
 
   return (
     <div ref={drop} className={classNames("dropzone", { "over": isOver })}>
-      {elements.length > 0 ? elements.map(element => renderItem(element)) : "Drop items here"}
+      {elements.length > 0 ? elements.map(element => renderItem(element)) : <span className="drop-text">Drop item here</span>}
     </div>
   )
 }

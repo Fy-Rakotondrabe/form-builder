@@ -17,6 +17,11 @@
   height: 100vh;
   width: 100%;
   flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  flex-wrap: wrap;
+  position: relative;
 }
 
 .item-properties {
@@ -43,7 +48,8 @@
   margin: 5px;
   border-radius: 4px;
   width: 300px;
-  min-height: 100px;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
 .selected {
@@ -52,4 +58,10 @@
 
 .over {
   background-color: aliceblue;
+}
+
+.drop-text {
+  position: absolute;
+  top: 50%;
+  left: 45%;
 }

@@ -3,6 +3,7 @@ import { useStore } from "../store/store"
 import { ItemTypes } from "../constants/constants";
 import { TextField, Typography } from "@mui/material";
 import { Control, Page } from "../model";
+import { renderSetting } from "./renderSetting";
 
 const ItemProperties = () => {
   const { selectedElement, pages, updatePage, updatePageControls } = useStore();
@@ -10,19 +11,19 @@ const ItemProperties = () => {
   const [item, setItem] = useState<Page | Control | undefined>(undefined);
 
   useEffect(() => {
+    setType(selectedElement?.type as any);
+
     if (selectedElement?.type === ItemTypes.PAGE) {
       setItem(pages.find((page) => page.id === selectedElement.id));
-      setType(ItemTypes.PAGE);
     } else {
       if (selectedElement?.parentType === ItemTypes.PAGE) {
         const parent = pages.find((page) => page.id === selectedElement.parentId);
         setItem(parent?.controls.find(item => item.id === selectedElement.id))
       }
-      setType(ItemTypes.FIELD);
     }
   }, [pages, selectedElement])
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
     const data: any = { ...item, [name]: value }
     setItem(data);
@@ -33,7 +34,7 @@ const ItemProperties = () => {
     }
   }, [item, selectedElement?.parentId, selectedElement?.type, updatePage, updatePageControls])
 
-  const renderSetting = useCallback(() => {
+  const renderSettingView = useCallback(() => {
     switch (type) {
       case ItemTypes.PAGE:
         return (
@@ -50,27 +51,7 @@ const ItemProperties = () => {
           </>
         );
       case ItemTypes.FIELD:
-        return (
-          <>
-            <Typography>Field</Typography>
-            <TextField 
-              label="Label" 
-              name="label"
-              value={(item as Control)?.label} 
-              sx={{ mt: 4 }}
-              onChange={handleChange}
-              fullWidth
-            />
-            <TextField 
-              label="Placeholder" 
-              name="placeholder"
-              value={(item as Control)?.placeholder} 
-              sx={{ mt: 4 }}
-              onChange={handleChange}
-              fullWidth
-            />
-          </>
-        );
+        return renderSetting(item as Control, handleChange);
       default:
         return <></>;
     }
@@ -78,7 +59,7 @@ const ItemProperties = () => {
 
   return (
     <div className="item-properties">
-      {selectedElement && renderSetting()}
+      {selectedElement && renderSettingView()}
     </div>
   )
 }

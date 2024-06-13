@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField, Box } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { useStyles } from './style';
+import moment, { Moment } from 'moment';
 
 interface DateTimePickerInputProps {
   mode: 'date' | 'time';
@@ -14,16 +15,18 @@ const DateTimePickerInput: React.FC<DateTimePickerInputProps> = ({
   label,
   value
 }) => {
-  const [date, setDate] = useState<Date>(new Date(value));
+  const [date, setDate] = useState<Moment>(moment());
   const classes = useStyles();
 
   useEffect(() => {
-    const newDate = new Date(value);
-    setDate(newDate);
+    if (value) {
+      const newDate = moment(value);
+      setDate(newDate);
+    }
   }, [value, mode]);
 
   return (
-    <Box my={3} className={classes.container}>
+    <Box my={1} className={classes.container}>
       {mode === 'date' ? (
         <DatePicker
           value={date}

@@ -8,8 +8,8 @@ export const ItemTypes = {
 export const ElementTypes = {
   PAGE: 'page',
   TEXT: 'text',
-  NUMBER: 'number',
-  DATE: 'date',
+  NUMBER: 'numeric',
+  DATE: 'date-picker',
 }
 
 export const Elements: Element[] = [
