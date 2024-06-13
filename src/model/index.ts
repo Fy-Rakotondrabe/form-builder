@@ -25,6 +25,7 @@ export interface Page {
   id: string;
   title: string;
   controls: Control[];
+  index: number;
 }
 
 export interface SelectedElement {

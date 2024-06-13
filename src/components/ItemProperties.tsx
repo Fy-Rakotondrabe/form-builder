@@ -48,6 +48,15 @@ const ItemProperties = () => {
               onChange={handleChange}
               fullWidth
             />
+            <TextField 
+              label="N° Page" 
+              name="index"
+              value={(item as Page)?.index} 
+              sx={{ mt: 4 }}
+              type="number"
+              onChange={handleChange}
+              fullWidth
+            />
           </>
         );
       case ItemTypes.FIELD:

@@ -1,16 +1,21 @@
 import { create } from 'zustand'
 import { Control, Page, StoreProps } from '../model'
 
-export const useStore = create<StoreProps>((set) => ({
+export const useStore = create<StoreProps>((set, get) => ({
   pages: [],
   selectedElement: null,
   setPage: (id: string) => {
     const page: Page = {
       id,
       title: 'New Page',
-      controls: []
+      controls: [],
+      index: get().pages.length + 1,
     }
-    set((state) => ({ ...state, pages: [...state.pages, page] }))
+
+    const pages = get().pages;
+    pages.sort((a, b) => -a.index + b.index)
+    pages.push(page)
+    set((state) => ({ ...state, pages: pages }))
   },
   removePage: (id: string) => {
     set((state) => ({ ...state, pages: state.pages.filter((page) => page.id !== id) }))
