@@ -2,17 +2,31 @@ import { Element } from "../model"
 
 export const ItemTypes = {
   FIELD: 'element',
-  PAGE: 'page'
+  PAGE: 'page',
+  ENTITY: 'entity',
+  FORM: 'form'
 }
 
 export const ElementTypes = {
   PAGE: 'page',
+  ENTITY: 'entity',
+  FORM: 'form',
   TEXT: 'text',
   NUMBER: 'numeric',
   DATE: 'date-picker',
 }
 
 export const Elements: Element[] = [
+  {
+    type: ElementTypes.ENTITY,
+    label: 'Entity',
+    elementType: ItemTypes.ENTITY,
+  },
+  {
+    type: ElementTypes.FORM,
+    label: 'Form',
+    elementType: ItemTypes.FORM,
+  },
   {
     type: ElementTypes.PAGE,
     label: 'Page',

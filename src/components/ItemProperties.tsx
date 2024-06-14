@@ -1,38 +1,57 @@
 import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../store/store"
 import { ItemTypes } from "../constants/constants";
-import { TextField, Typography } from "@mui/material";
-import { Control, Page } from "../model";
+import { MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Control, Entity, Form, Page } from "../model";
 import { renderSetting } from "./renderSetting";
 
 const ItemProperties = () => {
-  const { selectedElement, pages, updatePage, updatePageControls } = useStore();
+  const { selectedElement, pages, entities, entityNodes, forms, updatePage, updatePageControls, updateEntityNode } = useStore();
   const [type, setType] = useState(ItemTypes.PAGE);
-  const [item, setItem] = useState<Page | Control | undefined>(undefined);
+  const [item, setItem] = useState<Page | Control | Entity | Form | undefined>(undefined);
 
   useEffect(() => {
     setType(selectedElement?.type as any);
 
-    if (selectedElement?.type === ItemTypes.PAGE) {
-      setItem(pages.find((page) => page.id === selectedElement.id));
-    } else {
-      if (selectedElement?.parentType === ItemTypes.PAGE) {
-        const parent = pages.find((page) => page.id === selectedElement.parentId);
-        setItem(parent?.controls.find(item => item.id === selectedElement.id))
-      }
+    switch (selectedElement?.type) {
+      case ItemTypes.PAGE:
+        setItem(pages.find((page) => page.id === selectedElement.id));
+        break;
+      case ItemTypes.ENTITY:
+        setItem(entityNodes.find((entity) => entity.nodeId === selectedElement.id));
+        break;
+      case ItemTypes.FORM:
+        setItem(forms.find((form) => form.id === selectedElement.id));
+        break;
+      default:
+        if (selectedElement?.parentType === ItemTypes.PAGE) {
+          const parent = pages.find((page) => page.id === selectedElement.parentId);
+          setItem(parent?.controls.find(item => item.id === selectedElement.id));
+        }
+        break;
     }
-  }, [pages, selectedElement])
+  }, [entityNodes, forms, pages, selectedElement])
 
   const handleChange = useCallback((e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
     const data: any = { ...item, [name]: value }
     setItem(data);
-    if (selectedElement?.type === ItemTypes.PAGE) {
-      updatePage(data);
-    } else {
-      updatePageControls(selectedElement?.parentId ?? '', data);
+    switch (selectedElement?.type) {
+      case ItemTypes.PAGE:
+        updatePage(data);
+        break;
+      case ItemTypes.FIELD:
+        updatePageControls(selectedElement?.parentId ?? '', data);
+        break;
+      case ItemTypes.ENTITY: {
+        const entity = entities.find(item => item.id === value);
+        updateEntityNode(selectedElement?.id, {...entity, nodeId: selectedElement?.id});
+        break;
+      }
+      default:
+        break;
     }
-  }, [item, selectedElement?.parentId, selectedElement?.type, updatePage, updatePageControls])
+  }, [entities, item, selectedElement?.id, selectedElement?.parentId, selectedElement?.type, updateEntityNode, updatePage, updatePageControls])
 
   const renderSettingView = useCallback(() => {
     switch (type) {
@@ -59,12 +78,36 @@ const ItemProperties = () => {
             />
           </>
         );
+      case ItemTypes.ENTITY:
+        return (
+          <>
+            <Typography>Entity</Typography>
+            <Select
+              value={(item as Entity)?.id}
+              onChange={handleChange}
+              fullWidth
+              name="id"
+              sx={{ mt: 4 }}
+            >
+              {entities.map((entity) => (
+                <MenuItem value={entity.id}>{entity.name}</MenuItem>
+              ))}
+            </Select>
+          </>
+        );
+      case ItemTypes.FORM:
+        return (
+          <>
+            <Typography>Form</Typography>
+            <Typography variant="caption">Id: {(item as Form)?.id}</Typography>
+          </>
+        );
       case ItemTypes.FIELD:
         return renderSetting(item as Control, handleChange);
       default:
         return <></>;
     }
-  }, [handleChange, item, type])
+  }, [entities, handleChange, item, type])
 
   return (
     <div className="item-properties">

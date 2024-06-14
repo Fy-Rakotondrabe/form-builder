@@ -1,9 +1,12 @@
 import { create } from 'zustand'
-import { Control, Page, StoreProps } from '../model'
+import { Control, Entity, Form, Page, StoreProps } from '../model'
 
 export const useStore = create<StoreProps>((set, get) => ({
   pages: [],
   selectedElement: null,
+  entities: [],
+  entityNodes: [],
+  forms: [],
   setPage: (id: string) => {
     const page: Page = {
       id,
@@ -45,5 +48,30 @@ export const useStore = create<StoreProps>((set, get) => ({
   },
   removePageControl: (pageId: string, controlId: string) => {
     set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: p.controls.filter((c) => c.id !== controlId) }) : p) }))
-  }
+  },
+  setForms: (id: string) => {
+    const form = {
+      id,
+      pages: [],
+    }
+    set((state) => ({ ...state, forms: [...state.forms, form] }))
+  },
+  updateForm: (form: Form) => {
+    set((state) => ({ ...state, forms: state.forms.map((f) => f.id === form.id ? form : f) }))
+  },
+  deleteForm: (id: string) => {
+    set((state) => ({ ...state, forms: state.forms.filter((f) => f.id !== id) }))
+  },
+  setEntities: (entities: Entity[]) => {
+    set((state) => ({ ...state, entities }))
+  },
+  setEntityNode: (entity: Entity) => {
+    set((state) => ({ ...state, entityNodes: [...state.entityNodes, entity] }))
+  },
+  updateEntityNode: (id: string, entityNode: Entity) => {
+    set((state) => ({ ...state, entityNodes: state.entityNodes.map((e) => e.nodeId === id ? entityNode : e) }))
+  },
+  deleteEntityNode: (id: string) => {
+    set((state) => ({ ...state, entityNodes: state.entityNodes.filter((e) => e.id !== id) }))
+  },
 }))

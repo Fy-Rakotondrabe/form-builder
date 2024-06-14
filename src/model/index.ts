@@ -35,8 +35,16 @@ export interface SelectedElement {
   parentType: string | null;
 }
 
+export interface Form {
+  id: string;
+  pages: Page[];
+}
+
 export interface StoreProps {
   pages: Page[];
+  entities: Entity[];
+  entityNodes: Entity[];
+  forms: Form[];
   selectedElement: SelectedElement | null;
   setPage: (id: string) => void;
   removePage: (id: string) => void;
@@ -45,5 +53,17 @@ export interface StoreProps {
   setPageControls: (pageId: string, controls: Control[]) => void;
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
+  setForms: (id: string) => void;
+  updateForm: (form: Form) => void;
+  deleteForm: (formId: string) => void;
+  setEntities: (entities: Entity[]) => void;
+  setEntityNode: (entity: Entity) => void;
+  updateEntityNode: (id: string, entity: Entity) => void;
+  deleteEntityNode: (entityId: string) => void;
 }
 
+export interface Entity {
+  name: string;
+  id: string;
+  nodeId: string;
+}

@@ -1,15 +1,15 @@
-import DropZone from "./Dropzone"
+import FormSection from "./Flow"
 import ItemProperties from "./ItemProperties"
 import Sidebar from "./Sidebar"
 
-const Layout = () => {
+const FormBuilder = () => {
   return (
     <div className="layout">
       <Sidebar />
-      <DropZone />
+      <FormSection />
       <ItemProperties />
     </div>
   )
 }
 
-export default Layout
+export default FormBuilder

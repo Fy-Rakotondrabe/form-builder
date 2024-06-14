@@ -7,13 +7,14 @@ import { Control, Element, Page } from "../model";
 import { v4 as uuidv4 } from "uuid";
 import { renderControl } from "./renderControl";
 import { Box } from "@mui/material";
+import { Handle, Position } from "reactflow";
 
 interface PageProps {
   id: string
 }
 
 const PageComponent: FC<PageProps> = ({ id }) => {
-  const { pages, selectedElement, setSelectedElement, setPageControls } = useStore();
+  const { pages, setSelectedElement, setPageControls } = useStore();
   const [page, setPage] = useState<Page | undefined>();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const PageComponent: FC<PageProps> = ({ id }) => {
     setPage(match);
   }, [id, pages])
 
-  const [{ isOver }, drop] = useDrop(() => ({
+  const [, drop] = useDrop(() => ({
     accept: ItemTypes.FIELD,
     drop: (item: Element, monitor) => {
       const didDrop = monitor.didDrop();
@@ -50,8 +51,9 @@ const PageComponent: FC<PageProps> = ({ id }) => {
     <div 
       ref={drop}
       onClick={() => setSelectedElement(page.id, ItemTypes.PAGE, null, null)} 
-      className={classNames("page", { "selected": selectedElement?.id === page.id, "over": isOver })}
+      className={classNames("page")}
     >
+      <Handle type="target" position={Position.Left} />
       {page?.title}
       <Box sx={{ mt: 3 }}>
         {page?.controls.map((control) => (
