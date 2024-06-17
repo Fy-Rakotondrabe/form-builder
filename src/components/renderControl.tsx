@@ -3,7 +3,6 @@ import BarcodeScanner from './fields/BarCodeScanner';
 import CalculatedField from './fields/CalculatedField';
 import CheckboxField from './fields/Checkbox';
 import DateTimePickerInput from './fields/DateTimePickerInput';
-import DigitalSignature from './fields/DigitalSignature';
 import ImageInput from './fields/ImageInput';
 import LocationInput from './fields/LocationInput';
 import SelectComponent from './fields/Select';
@@ -61,14 +60,6 @@ export function renderControl(
           value={value}
         />
       );
-    case 'digital-signature':
-      return (
-        <DigitalSignature
-          label={label ?? ''}
-         
-          value={value}
-        />
-      );
     case 'numeric':
       return (
         <MUITextField
@@ -86,14 +77,13 @@ export function renderControl(
           sx={{ my: 1 }}
         />
       );
-    case 'multiple-choice':
+    case 'choice':
       return (
         <SelectComponent
           label={label ?? ''}
           format={format as any}
           options={options ?? []}
           value={value}
-         
         />
       );
     case 'date-picker':

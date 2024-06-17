@@ -36,6 +36,8 @@ const PageComponent: FC<PageProps> = ({ id }) => {
         value: '',
         placeholder: item.label,
         required: false,
+        format: 'single',
+        options: ['A', 'B']
       }
       setPageControls(page?.id ?? '', [...(page?.controls ?? []), newControl]);
     },

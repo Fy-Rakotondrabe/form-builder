@@ -1,5 +1,4 @@
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import { useStyles } from './style';
 
 interface CalculatedFieldProps {
@@ -12,18 +11,16 @@ const CalculatedField: React.FC<CalculatedFieldProps> = ({
   const classes = useStyles();
 
   return (
-    <Box className={classes.container}>
-      <TextField
-        label={label}
-        variant="outlined"
-        fullWidth
-        className={classes.inputDefaultStyle}
-        InputProps={{
-          readOnly: true,
-        }}
-        value={'0'}
-      />
-    </Box>
+    <TextField
+      label={label}
+      variant="outlined"
+      fullWidth
+      className={classes.inputDefaultStyle}
+      InputProps={{
+        readOnly: true,
+      }}
+      value={'0'}
+    />
   );
 };
 

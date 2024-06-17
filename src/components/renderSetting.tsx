@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
+import { Autocomplete, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Control } from "../model";
 
 export function renderSetting(
@@ -14,7 +14,8 @@ export function renderSetting(
     prefix,
     required,
     value,
-    label
+    label,
+    formula
   } = control;
 
   switch (type) {
@@ -63,29 +64,78 @@ export function renderSetting(
     //   return (
     //     <Reading index={index} label={label ?? ''} format={format} suffix={suffix} value={value} subValue={subValue} />
     //   );
-    // case 'checkbox':
-    //   return (
-    //     <CheckboxField label={label ?? ''} value={value} />
-    //   );
-    // case 'geolocation':
-    //   return (
-    //     <LocationInput label={label ?? ''} value={value} />
-    //   );
-    // case 'barcode-scan':
-    //   return (
-    //     <BarcodeScanner
-    //       label={label ?? ''}
-    //       value={value}
-    //     />
-    //   );
-    // case 'digital-signature':
-    //   return (
-    //     <DigitalSignature
-    //       label={label ?? ''}
-         
-    //       value={value}
-    //     />
-    //   );
+    case 'checkbox':
+      return (
+        <>
+          <Typography>Checkbox</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!value} 
+                onChange={(e) => handleChange({ target: { name: 'value', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Value" 
+          />
+        </>
+      );
+    case 'geolocation':
+      return (
+        <>
+          <Typography>Geolocation</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
+    case 'barcode-scan':
+      return (
+        <>
+          <Typography>Barcode Scan</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     case 'numeric':
       return (
         <>
@@ -107,6 +157,35 @@ export function renderSetting(
             fullWidth
           />
           <TextField 
+            label="Prefix" 
+            name="prefix"
+            value={prefix} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField 
+            label="Suffix" 
+            name="suffix"
+            value={suffix} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControl fullWidth sx={{ mt: 4 }}>
+            <InputLabel id="format-select-label">Format</InputLabel>
+            <Select
+              labelId="format-select-label"
+              id="format-select"
+              value={format}
+              label="Format"
+              onChange={(e) => handleChange({ target: { name: 'format', value: e.target.value } } as any)}
+            >
+              <MenuItem value={'decimal'}>Decimal</MenuItem>
+              <MenuItem value={'integer'}>Integer</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField 
             label="Default Value" 
             name="value"
             value={value} 
@@ -127,16 +206,48 @@ export function renderSetting(
           />
         </>
       );
-    // case 'multiple-choice':
-    //   return (
-    //     <SelectComponent
-    //       label={label ?? ''}
-    //       format={format as any}
-    //       options={options ?? []}
-    //       value={value}
-         
-    //     />
-    //   );
+    case 'choice':
+      return (
+        <>
+          <Typography>Multiple Choice</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <Autocomplete
+            multiple
+            id="tags-outlined"
+            options={options ?? []}
+            getOptionLabel={(option) => option}
+            defaultValue={options ?? []}
+            onChange={(_, newValue) => handleChange({ target: { name: 'options', value: newValue } } as any)}
+            freeSolo
+            sx={{ mt: 2 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Options"
+                placeholder="Options"
+              />
+            )}
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     case 'date-picker':
       return (
         <>
@@ -185,19 +296,63 @@ export function renderSetting(
           />
         </>
       );
-    // case 'photo':
-    //   return (
-    //     <ImageInput
-    //       type={tableId === '' ? 'basic' : 'table'}
-    //       value={value}
-    //     />
-    //   );
-    // case 'calculated':
-    //   return (
-    //     <CalculatedField
-    //       label={label ?? ''}
-    //     />
-    //   );
+    case 'photo':
+      return (
+        <>
+          <Typography>Photo</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
+    case 'calculated':
+      return (
+        <>
+          <Typography>Calculated</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            label="Formula [field1] + [field2]" 
+            name="formula"
+            placeholder="[field1] + [field2]"
+            value={formula} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     default:
       return <></>;
   }

@@ -86,8 +86,9 @@ const FlowSection = () => {
         fitView
         nodeTypes={nodeTypes}
         attributionPosition="top-right"
+        zoomOnScroll={false}
       >
-        <MiniMap/>
+        <MiniMap pannable zoomable draggable/>
         <Controls />
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>

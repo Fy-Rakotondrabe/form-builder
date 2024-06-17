@@ -13,7 +13,7 @@ const ImageInput: React.FC<ImageInputProps> = () => {
   const classes = useStyles();
 
   return (
-    <Box className={classes.inputDefaultStyle}>
+    <Box className={classes.inputDefaultStyle} sx={{ mb: 2 }}>
       <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography fontSize={10}>Photo</Typography>
