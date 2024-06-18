@@ -7,8 +7,6 @@ import ReactFlow, {
   Controls,
   MiniMap,
   addEdge,
-  useEdgesState,
-  useNodesState,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
@@ -17,6 +15,7 @@ import FormComponent from './FormComponent';
 import PageComponent from './Page';
 import { useStore } from '../store/store';
 import { Element } from '../model';
+import useForm from '../hooks/useForm';
 
 const nodeTypes = {
   [ItemTypes.ENTITY]: EntityComponent,
@@ -25,8 +24,14 @@ const nodeTypes = {
 };
 
 const FlowSection = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const {
+    nodes,
+    setNodes,
+    onNodesChange,
+    edges,
+    setEdges,
+    onEdgesChange,
+  } = useForm();
   const { entities, setPage, setForms, setEntityNode } = useStore();
   
   const onConnect = useCallback(
