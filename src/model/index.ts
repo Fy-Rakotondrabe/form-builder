@@ -23,7 +23,7 @@ export interface Control {
 
 export interface Page {
   id: string;
-  title: string;
+  pageName: string;
   controls: Control[];
   index: number;
 }
@@ -37,7 +37,6 @@ export interface SelectedElement {
 
 export interface Form {
   id: string;
-  pages: Page[];
 }
 
 export interface StoreProps {

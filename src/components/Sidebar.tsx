@@ -1,4 +1,3 @@
-import { Button } from "@mui/material"
 import { Elements } from "../constants/constants"
 import ElementItem from "./Element"
 
@@ -10,9 +9,6 @@ const Sidebar = () => {
           <ElementItem key={element.type} element={element} />
         ))}
       </div>
-      <Button variant="contained" fullWidth>
-        Save
-      </Button>
     </div>
   )
 }

@@ -17,6 +17,7 @@ import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
 import FormComponent from './FormComponent';
 import PageComponent from './Page';
+import { Button } from '@mui/material';
 
 
 const nodeTypes = {
@@ -33,6 +34,7 @@ const FlowSection = () => {
     edges,
     setEdges,
     onEdgesChange,
+    onSaveForm
   } = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const { entities, setPage, setForms, setEntityNode } = useStore();
@@ -114,22 +116,27 @@ const FlowSection = () => {
   }), [entities]);
 
   return (
-    <div ref={drop} className={classNames("flow", { "over": isOver })}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-        nodeTypes={nodeTypes}
-        attributionPosition="top-right"
-        zoomOnScroll={false}
-      >
-        <MiniMap pannable zoomable draggable/>
-        <Controls />
-        <Background variant={BackgroundVariant.Dots} />
-      </ReactFlow>
+    <div className='flowContainer'>
+      <div ref={drop} className={classNames("flow", { "over": isOver })}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+          nodeTypes={nodeTypes}
+          attributionPosition="top-right"
+          zoomOnScroll={false}
+        >
+          <MiniMap pannable zoomable draggable/>
+          <Controls />
+          <Background variant={BackgroundVariant.Dots} />
+        </ReactFlow>
+      </div>
+      <Button className='save-btn' variant="contained" onClick={onSaveForm} fullWidth>
+        Save
+      </Button>
     </div>
   )
 }

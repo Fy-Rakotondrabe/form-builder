@@ -45,7 +45,7 @@ const PageComponent: FC<PageProps> = ({ id }) => {
       className={classNames("page")}
     >
       <Handle type="target" position={Position.Left} />
-      {page?.title}
+      {page?.pageName}
       <Box sx={{ mt: 3 }}>
         {page?.controls.map((control) => (
           <div onClick={(e) => {

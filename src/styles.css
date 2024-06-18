@@ -13,6 +13,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: scroll;
 }
 
 .dropzone {
@@ -28,8 +29,8 @@
 }
 
 .flow {
-  height: 100vh;
   width: 100%;
+  height: 100%;
 }
 
 .item-properties {
@@ -80,4 +81,11 @@
   position: absolute;
   top: 50%;
   left: 45%;
+}
+
+.flowContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
 }

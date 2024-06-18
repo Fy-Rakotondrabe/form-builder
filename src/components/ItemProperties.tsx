@@ -60,9 +60,9 @@ const ItemProperties = () => {
           <>
             <Typography>Page</Typography>
             <TextField 
-              label="Title" 
-              name="title"
-              value={(item as Page)?.title} 
+              label="Name" 
+              name="pageName"
+              value={(item as Page)?.pageName} 
               sx={{ mt: 4 }}
               onChange={handleChange}
               fullWidth
