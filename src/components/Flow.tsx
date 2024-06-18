@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import ReactFlow, {
@@ -10,12 +11,13 @@ import ReactFlow, {
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
+import useForm from '../hooks/useForm';
+import { Element } from '../model';
+import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
 import FormComponent from './FormComponent';
 import PageComponent from './Page';
-import { useStore } from '../store/store';
-import { Element } from '../model';
-import useForm from '../hooks/useForm';
+
 
 const nodeTypes = {
   [ItemTypes.ENTITY]: EntityComponent,
@@ -32,11 +34,42 @@ const FlowSection = () => {
     setEdges,
     onEdgesChange,
   } = useForm();
+  const { enqueueSnackbar } = useSnackbar();
   const { entities, setPage, setForms, setEntityNode } = useStore();
   
+  const connectionRules = useCallback((params, nodes, edges) => {
+    const { source, target } = params;
+    const sourceNode = nodes.find(n => n.id === source);
+    const targetNode = nodes.find(n => n.id === target);
+
+    if (sourceNode.type === ItemTypes.ENTITY) {
+      const existingConnections = edges.filter(e => e.source === source);
+      if (existingConnections.length >= 1) {
+        enqueueSnackbar('This node can only connect to one node. (Select edge and press Del to remove it)', { variant: 'warning' });
+        return false; // Prevent connection
+      }
+    }
+
+    if ((sourceNode.type === ItemTypes.ENTITY && targetNode.type === ItemTypes.FORM) || (sourceNode.type === ItemTypes.FORM && targetNode.type === ItemTypes.ENTITY)) {
+      // Allow the connection
+      return true
+    } else if ((sourceNode.type === ItemTypes.FORM && targetNode.type === ItemTypes.PAGE) || (sourceNode.type === ItemTypes.PAGE && targetNode.type === ItemTypes.FORM)) {
+      // Allow the connection
+      return true
+    } else {
+      // Prevent the connection and alert the user
+      enqueueSnackbar(`${sourceNode.type} can only be connected to ${targetNode.type} and vice versa.`, { variant: 'warning' });
+      return false;
+    }
+  }, [enqueueSnackbar]);
+
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+    (params) => {
+      if (connectionRules(params, nodes, edges)) {
+        setEdges((eds) => addEdge(params, eds))
+      }
+    },
+    [connectionRules, edges, nodes, setEdges],
   );
 
   const [{ isOver }, drop] = useDrop(() => ({

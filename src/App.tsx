@@ -1,13 +1,14 @@
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { SnackbarProvider } from 'notistack'
 
-import './styles.css'
-import FormBuilder from "./components/FormBuilder";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { useEffect } from "react";
+import FormBuilder from "./components/FormBuilder";
 import { Entity } from "./model";
 import { useStore } from "./store/store";
-import { useEffect } from "react";
+import './styles.css';
 
 const entities: Entity[] = [
   {name: 'Percolation', id: 'azerty-123'},
@@ -22,11 +23,13 @@ function App() {
   }, [setEntities]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <DndProvider backend={HTML5Backend}>
-        <FormBuilder />
-      </DndProvider>
-    </LocalizationProvider>
+    <SnackbarProvider>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <DndProvider backend={HTML5Backend}>
+          <FormBuilder />
+        </DndProvider>
+      </LocalizationProvider>
+    </SnackbarProvider>
   );
 }
 
