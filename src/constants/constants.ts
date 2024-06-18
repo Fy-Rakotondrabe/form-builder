@@ -21,7 +21,8 @@ export const ElementTypes = {
   BARCODE_SCAN: 'barcode-scan',
   CHOICE: 'choice',
   PHOTO: 'photo',
-  CALCULATED: 'calculated'
+  CALCULATED: 'calculated',
+  READING: 'reading'
 }
 
 export const Elements: Element[] = [
@@ -93,6 +94,11 @@ export const Elements: Element[] = [
   {
     type: ElementTypes.CHECKBOX,
     label: 'Checkbox',
+    elementType: ItemTypes.FIELD,
+  },
+  {
+    type: ElementTypes.READING,
+    label: 'Reading',
     elementType: ItemTypes.FIELD,
   }
 ]

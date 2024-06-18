@@ -50,7 +50,7 @@ export interface StoreProps {
   removePage: (id: string) => void;
   updatePage: (page: Page) => void;
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => void;
-  setPageControls: (pageId: string, controls: Control[]) => void;
+  setPageControls: (pageId: string, item: Element) => void;
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
   setForms: (id: string) => void;

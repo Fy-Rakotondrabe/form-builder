@@ -8,6 +8,7 @@ import LocationInput from './fields/LocationInput';
 import SelectComponent from './fields/Select';
 import TextField from './fields/TextField';
 import { Control } from '../model';
+import Reading from './fields/Reading';
 
 export function renderControl(
   control: Control,
@@ -21,7 +22,8 @@ export function renderControl(
     suffix,
     prefix,
     required,
-    value
+    value,
+    index,
   } = control;
 
   const label = required ? `${control.label} *` : control.label;
@@ -41,10 +43,10 @@ export function renderControl(
           value={value}
         />
       );
-    // case 'reading':
-    //   return (
-    //     <Reading index={index} label={label ?? ''} format={format} suffix={suffix} value={value} subValue={subValue} />
-    //   );
+    case 'reading':
+      return (
+        <Reading label={label} index={index} format={format} suffix={suffix} value={value} />
+      );
     case 'checkbox':
       return (
         <CheckboxField label={label ?? ''} value={value} />

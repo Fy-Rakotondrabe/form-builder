@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { Control, Entity, Form, Page, StoreProps } from '../model'
+import { v4 as uuidv4 } from "uuid";
+import { Control, Element, Entity, Form, Page, StoreProps } from '../model'
 
 export const useStore = create<StoreProps>((set, get) => ({
   pages: [],
@@ -29,8 +30,21 @@ export const useStore = create<StoreProps>((set, get) => ({
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => {
     set((state) => ({ ...state, selectedElement: { id, type, parentId, parentType } }))
   },
-  setPageControls: (pageId: string, controls: Control[]) => {
-    set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls }) : p) }))
+  setPageControls: (pageId: string, item: Element) => {
+    const controls = get().pages.find((p) => p.id === pageId)?.controls ?? [];
+    const lastReadingIndex = controls.filter((c) => c.type === 'reading').map(item => item.index).reduce((a, b) => Math.max(a, b), 0);
+    const newControl: Control = {
+      id: uuidv4(),
+      type: item.type,
+      label: item.label,
+      value: '',
+      placeholder: item.label,
+      required: false,
+      format: 'single',
+      options: ['A', 'B'],
+      index: lastReadingIndex + 1
+    }
+    set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: [...p.controls, newControl] }) : p) }))
   },
   updatePageControls: (pageId: string, control: Control) => {
     set((state) => ({

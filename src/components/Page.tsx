@@ -3,11 +3,10 @@ import { useStore } from "../store/store";
 import classNames from "classnames";
 import { ItemTypes } from "../constants/constants";
 import { useDrop } from "react-dnd";
-import { Control, Element, Page } from "../model";
-import { v4 as uuidv4 } from "uuid";
 import { renderControl } from "./renderControl";
 import { Box } from "@mui/material";
 import { Handle, Position } from "reactflow";
+import { Element, Page } from "../model";
 
 interface PageProps {
   id: string
@@ -29,17 +28,7 @@ const PageComponent: FC<PageProps> = ({ id }) => {
       if (didDrop) {
         return;
       }
-      const newControl: Control = {
-        id: uuidv4(),
-        type: item.type,
-        label: item.label,
-        value: '',
-        placeholder: item.label,
-        required: false,
-        format: 'single',
-        options: ['A', 'B']
-      }
-      setPageControls(page?.id ?? '', [...(page?.controls ?? []), newControl]);
+      setPageControls(page?.id ?? '', item);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

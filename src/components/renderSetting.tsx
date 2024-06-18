@@ -15,7 +15,8 @@ export function renderSetting(
     required,
     value,
     label,
-    formula
+    formula,
+    index
   } = control;
 
   switch (type) {
@@ -60,10 +61,38 @@ export function renderSetting(
           />
         </>
       );
-    // case 'reading':
-    //   return (
-    //     <Reading index={index} label={label ?? ''} format={format} suffix={suffix} value={value} subValue={subValue} />
-    //   );
+    case 'reading':
+      return (
+        <>
+          <Typography>Reading</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            label="Reading rank" 
+            name="index"
+            value={index} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     case 'checkbox':
       return (
         <>
