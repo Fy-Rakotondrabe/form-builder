@@ -67,3 +67,9 @@ export interface Entity {
   id: string;
   nodeId: string;
 }
+
+export interface Form {
+  id: string;
+  pages: Page[];
+  entity: string;
+}

@@ -64,7 +64,7 @@ export const useStore = create<StoreProps>((set, get) => ({
     set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: p.controls.filter((c) => c.id !== controlId) }) : p) }))
   },
   setForms: (id: string) => {
-    const form = { id }
+    const form: Form = { id, pages: [], entity: '' }
     set((state) => ({ ...state, forms: [...state.forms, form] }))
   },
   updateForm: (form: Form) => {

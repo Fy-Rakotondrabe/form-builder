@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { useSnackbar } from 'notistack';
-import { useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import ReactFlow, {
   Background,
@@ -13,7 +12,7 @@ import ReactFlow, {
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
 import { useFormContext } from '../context/formContext';
-import { Element } from '../model';
+import { Element, Form } from '../model';
 import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
 import FormComponent from './FormComponent';
@@ -27,7 +26,12 @@ const nodeTypes = {
   [ItemTypes.PAGE]: PageComponent,
 };
 
-const FlowSection = () => {
+interface FlowSectionProps {
+  onSave: (data: Form[]) => void;
+  onError: (error: string) => void;
+}
+
+const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
   const {
     nodes,
     setNodes,
@@ -35,12 +39,12 @@ const FlowSection = () => {
     edges,
     setEdges,
     onEdgesChange,
-    onSaveForm,
+    generateForm,
     onRemoveEntityNode,
     onRemoveForm,
     onRemovePage
   } = useFormContext();
-  const { enqueueSnackbar } = useSnackbar();
+
   const { entities, setPage, setForms, setEntityNode, resetSelected } = useStore();
   const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
   
@@ -52,7 +56,7 @@ const FlowSection = () => {
     if (sourceNode.type === ItemTypes.ENTITY) {
       const existingConnections = edges.filter(e => e.source === source);
       if (existingConnections.length >= 1) {
-        enqueueSnackbar('This node can only connect to one node. (Select edge and press Del to remove it)', { variant: 'warning' });
+        onError('This node can only connect to one node. (Select edge and press Del to remove it)');
         return false; // Prevent connection
       }
     }
@@ -65,10 +69,10 @@ const FlowSection = () => {
       return true
     } else {
       // Prevent the connection and alert the user
-      enqueueSnackbar(`${sourceNode.type} can only be connected to ${targetNode.type} and vice versa.`, { variant: 'warning' });
+      onError(`${sourceNode.type} can only be connected to ${targetNode.type} and vice versa.`);
       return false;
     }
-  }, [enqueueSnackbar]);
+  }, [onError]);
 
   const onConnect = useCallback(
     (params) => {
@@ -138,6 +142,11 @@ const FlowSection = () => {
   const onMoveEnd = useCallback((params) => {
     setTransform(params);
   }, []);
+
+  const onSaveForm = useCallback(() => {
+    const json = generateForm();
+    onSave(json);
+  }, [generateForm, onSave])  
 
   return (
     <div className='flowContainer'>
