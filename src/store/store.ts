@@ -70,7 +70,7 @@ export const useStore = create<StoreProps>((set, get) => ({
   updateForm: (form: Form) => {
     set((state) => ({ ...state, forms: state.forms.map((f) => f.id === form.id ? form : f) }))
   },
-  deleteForm: (id: string) => {
+  removeForm: (id: string) => {
     set((state) => ({ ...state, forms: state.forms.filter((f) => f.id !== id) }))
   },
   setEntities: (entities: Entity[]) => {
@@ -82,7 +82,10 @@ export const useStore = create<StoreProps>((set, get) => ({
   updateEntityNode: (id: string, entityNode: Entity) => {
     set((state) => ({ ...state, entityNodes: state.entityNodes.map((e) => e.nodeId === id ? entityNode : e) }))
   },
-  deleteEntityNode: (id: string) => {
+  removeEntityNode: (id: string) => {
     set((state) => ({ ...state, entityNodes: state.entityNodes.filter((e) => e.id !== id) }))
   },
+  resetSelected: () => {
+    set((state) => ({ ...state, selectedElement: null }))
+  }
 }))

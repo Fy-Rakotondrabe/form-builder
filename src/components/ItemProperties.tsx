@@ -1,12 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../store/store"
 import { ItemTypes } from "../constants/constants";
-import { MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Button, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Control, Entity, Form, Page } from "../model";
 import { renderSetting } from "./renderSetting";
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
+import { useFormContext } from "../context/formContext";
 
 const ItemProperties = () => {
-  const { selectedElement, pages, entities, entityNodes, forms, updatePage, updatePageControls, updateEntityNode } = useStore();
+  const { 
+    selectedElement, 
+    pages, 
+    entities, 
+    entityNodes, 
+    forms, 
+    updatePage, 
+    updatePageControls, 
+    updateEntityNode,
+    resetSelected,
+  } = useStore();
+  const {
+    onRemoveEntityNode,
+    onRemoveForm,
+    onRemovePage,
+    onRemovePageControl
+  } = useFormContext();
   const [type, setType] = useState(ItemTypes.PAGE);
   const [item, setItem] = useState<Page | Control | Entity | Form | undefined>(undefined);
 
@@ -52,6 +70,25 @@ const ItemProperties = () => {
         break;
     }
   }, [entities, item, selectedElement?.id, selectedElement?.parentId, selectedElement?.type, updateEntityNode, updatePage, updatePageControls])
+
+  const handleRemove = useCallback(() => {
+    switch (selectedElement?.type) {
+      case ItemTypes.PAGE:
+        onRemovePage(item.id)
+        break;
+      case ItemTypes.ENTITY:
+        onRemoveEntityNode((item as Entity).nodeId)
+        break;
+      case ItemTypes.FORM:
+        onRemoveForm(item.id)
+        break;
+      case ItemTypes.FIELD:
+        onRemovePageControl(selectedElement?.parentId ?? '', item.id)
+        break;
+    }
+    setItem(null);
+    resetSelected();
+  }, [selectedElement?.type, selectedElement?.parentId, resetSelected, onRemovePage, item, onRemoveEntityNode, onRemoveForm, onRemovePageControl])
 
   const renderSettingView = useCallback(() => {
     switch (type) {
@@ -110,8 +147,17 @@ const ItemProperties = () => {
   }, [entities, handleChange, item, type])
 
   return (
-    <div className="item-properties">
-      {selectedElement && renderSettingView()}
+    <div className="item-properties-container">
+      {item && selectedElement && (
+        <>
+          <div className="item-properties">
+            {selectedElement && renderSettingView()}
+          </div>
+            <Button className="remove-btn" fullWidth onClick={handleRemove} variant="contained" color="error" startIcon={<DeleteOutline />}>
+            Remove
+          </Button>
+        </>
+      )}
     </div>
   )
 }

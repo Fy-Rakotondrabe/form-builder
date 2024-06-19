@@ -11,7 +11,7 @@ const FormComponent = ({ data }) => {
       <Handle type="target" position={Position.Left} />
       <div>
         <Typography>Form</Typography>
-        <Typography variant="caption">Id: {form.id}</Typography>
+        <Typography variant="caption">Id: {form?.id}</Typography>
       </div>
       <Handle type="source" position={Position.Right} />
     </div>

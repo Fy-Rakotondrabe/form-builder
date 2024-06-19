@@ -54,11 +54,12 @@ export interface StoreProps {
   removePageControl: (pageId: string, controlId: string) => void;
   setForms: (id: string) => void;
   updateForm: (form: Form) => void;
-  deleteForm: (formId: string) => void;
+  removeForm: (formId: string) => void;
   setEntities: (entities: Entity[]) => void;
   setEntityNode: (entity: Entity) => void;
   updateEntityNode: (id: string, entity: Entity) => void;
-  deleteEntityNode: (entityId: string) => void;
+  removeEntityNode: (entityId: string) => void;
+  resetSelected: () => void;
 }
 
 export interface Entity {

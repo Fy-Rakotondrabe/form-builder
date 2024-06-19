@@ -11,7 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
-import useForm from '../hooks/useForm';
+import { useFormContext } from '../context/formContext';
 import { Element } from '../model';
 import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
@@ -35,7 +35,7 @@ const FlowSection = () => {
     setEdges,
     onEdgesChange,
     onSaveForm
-  } = useForm();
+  } = useFormContext();
   const { enqueueSnackbar } = useSnackbar();
   const { entities, setPage, setForms, setEntityNode } = useStore();
   

@@ -9,6 +9,7 @@ import FormBuilder from "./components/FormBuilder";
 import { Entity } from "./model";
 import { useStore } from "./store/store";
 import './styles.css';
+import { FormProvider } from './context/formContext';
 
 const entities: Entity[] = [
   {name: 'Percolation', id: 'azerty-123'},
@@ -26,7 +27,9 @@ function App() {
     <SnackbarProvider>
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <DndProvider backend={HTML5Backend}>
-          <FormBuilder />
+          <FormProvider>
+            <FormBuilder />
+          </FormProvider>
         </DndProvider>
       </LocalizationProvider>
     </SnackbarProvider>
