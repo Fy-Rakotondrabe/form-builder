@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { SnackbarProvider } from 'notistack'
+
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { useEffect } from "react";
+import FormBuilder from "./components/FormBuilder";
+import { Entity } from "./model";
+import { useStore } from "./store/store";
+import './styles.css';
+import { FormProvider } from './context/formContext';
+
+const entities: Entity[] = [
+  {name: 'Percolation', id: 'azerty-123'},
+  {name: 'Wet Concrete', id: 'qwerty-123'},
+]
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { setEntities } = useStore();
+
+  useEffect(() => {
+    setEntities(entities);
+  }, [setEntities]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <SnackbarProvider>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <DndProvider backend={HTML5Backend}>
+          <FormProvider>
+            <FormBuilder />
+          </FormProvider>
+        </DndProvider>
+      </LocalizationProvider>
+    </SnackbarProvider>
+  );
 }
 
 export default App
