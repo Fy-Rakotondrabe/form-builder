@@ -5,6 +5,12 @@
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "dnd-form",
+    "form-builder",
+    "form-ui",
+    "form"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -51,5 +57,9 @@
   },
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fy-Rakotondrabe/form-builder"
+  }
 }
