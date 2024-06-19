@@ -2,7 +2,7 @@ import { createContext, useContext, FC, ReactNode } from "react";
 import { useEdgesState, useNodesState, Node, Edge } from "reactflow";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
-import { enqueueSnackbar } from "notistack";
+import { Form } from "../model";
 
 interface FormContextType {
   nodes: Node[];
@@ -11,7 +11,7 @@ interface FormContextType {
   edges: Edge[];
   setEdges: any;
   onEdgesChange: any;
-  onSaveForm: () => void;
+  generateForm: () => Form[];
   onRemoveEntityNode: (id: string) => void;
   onRemoveForm: (id: string) => void;
   onRemovePage: (id: string) => void;
@@ -55,8 +55,8 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
     removePageControl(parentId, id);
   }, [removePageControl]);
 
-  const onSaveForm = useCallback(() => {
-    const formsData = []
+  const generateForm = useCallback(() => {
+    const formsData: Form[] = []
 
     try {
       entityNodes.forEach((entity) => {
@@ -71,11 +71,10 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
           entity: entity.id,
         })
       })
+      return formsData
     } catch (e) {
-      enqueueSnackbar('Close all nodes before saving (Entity -> Form -> Pages)', { variant: 'error' })
+      throw('Close all nodes before saving (Entity -> Form -> Pages)');
     }
-
-    console.log(formsData)
   }, [edges, entityNodes, forms, pages])
 
   const contextValue = {
@@ -85,7 +84,7 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
     edges,
     setEdges,
     onEdgesChange,
-    onSaveForm,
+    generateForm,
     onRemoveEntityNode,
     onRemoveForm,
     onRemovePage,
