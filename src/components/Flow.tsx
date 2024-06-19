@@ -1,12 +1,13 @@
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
   MiniMap,
+  Node,
   addEdge,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,10 +35,14 @@ const FlowSection = () => {
     edges,
     setEdges,
     onEdgesChange,
-    onSaveForm
+    onSaveForm,
+    onRemoveEntityNode,
+    onRemoveForm,
+    onRemovePage
   } = useFormContext();
   const { enqueueSnackbar } = useSnackbar();
-  const { entities, setPage, setForms, setEntityNode } = useStore();
+  const { entities, setPage, setForms, setEntityNode, resetSelected } = useStore();
+  const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
   
   const connectionRules = useCallback((params, nodes, edges) => {
     const { source, target } = params;
@@ -86,8 +91,8 @@ const FlowSection = () => {
         id,
         type: item.type,
         position: {
-          x: monitor.getSourceClientOffset().x,
-          y: monitor.getSourceClientOffset().y,
+          x: ((monitor.getClientOffset().x - 300) - transform.x) / transform.zoom, // 300 is item width
+          y: ((monitor.getClientOffset().y - 40) - transform.y) / transform.zoom, // 40 is item height
         },
         data: {
           id,
@@ -115,6 +120,25 @@ const FlowSection = () => {
     }),
   }), [entities]);
 
+  const handleNodeDelete = useCallback((node: Node) => {
+    switch (node.data.type) {
+      case ItemTypes.PAGE:
+        onRemovePage(node.id)
+        break;
+      case ItemTypes.ENTITY:
+        onRemoveEntityNode(node.id)
+        break;
+      case ItemTypes.FORM:
+        onRemoveForm(node.id)
+        break;
+    }
+    resetSelected();
+  }, [onRemoveEntityNode, onRemoveForm, onRemovePage, resetSelected])
+
+  const onMoveEnd = useCallback((params) => {
+    setTransform(params);
+  }, []);
+
   return (
     <div className='flowContainer'>
       <div ref={drop} className={classNames("flow", { "over": isOver })}>
@@ -124,12 +148,13 @@ const FlowSection = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          fitView
           nodeTypes={nodeTypes}
           attributionPosition="top-right"
           zoomOnScroll={false}
+          onNodesDelete={(nodes) => handleNodeDelete(nodes[0])}
+          onMoveEnd={onMoveEnd}
         >
-          <MiniMap pannable zoomable draggable/>
+          <MiniMap pannable zoomable draggable />
           <Controls />
           <Background variant={BackgroundVariant.Dots} />
         </ReactFlow>

@@ -25,7 +25,7 @@ export const ElementTypes = {
   READING: 'reading'
 }
 
-export const Elements: Element[] = [
+export const Nodes: Element[] = [
   {
     type: ElementTypes.ENTITY,
     label: 'Entity',
@@ -40,7 +40,10 @@ export const Elements: Element[] = [
     type: ElementTypes.PAGE,
     label: 'Page',
     elementType: ItemTypes.PAGE,
-  },
+  }
+]
+
+export const Fields: Element[] = [
   {
     type: ElementTypes.TEXT,
     label: 'Text',
