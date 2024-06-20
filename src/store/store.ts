@@ -7,14 +7,18 @@ export const useStore = create<StoreProps>((set, get) => ({
   selectedElement: null,
   entities: [],
   entityNodes: [],
-  setPage: (value: Page) => {
-    const pages = get().pages;
-    pages.sort((a, b) => -a.index + b.index)
-    pages.push({
-      ...value,
-      index: value.index ?? get().pages.length + 1
-    })
-    set((state) => ({ ...state, pages: pages }))
+  setPage: (value: Page | null) => {
+    if (value) {
+      const pages = get().pages;
+      pages.sort((a, b) => -a.index + b.index)
+      pages.push({
+        ...value,
+        index: value.index ?? get().pages.length + 1
+      })
+      set((state) => ({ ...state, pages: pages }))
+    } else {
+      set((state) => ({ ...state, pages: [] }))
+    }
   },
   removePage: (id: string) => {
     set((state) => ({ ...state, pages: state.pages.filter((page) => page.id !== id) }))
@@ -61,8 +65,12 @@ export const useStore = create<StoreProps>((set, get) => ({
   setEntities: (entities: Entity[]) => {
     set((state) => ({ ...state, entities }))
   },
-  setEntityNode: (entity: Entity) => {
-    set((state) => ({ ...state, entityNodes: [...state.entityNodes, entity] }))
+  setEntityNode: (entity: Entity | null) => {
+    if (entity) {
+      set((state) => ({ ...state, entityNodes: [...state.entityNodes, entity] }))
+    } else {
+      set((state) => ({ ...state, entityNodes: [] }))
+    }
   },
   updateEntityNode: (id: string, entityNode: Entity) => {
     set((state) => ({ ...state, entityNodes: state.entityNodes.map((e) => e.nodeId === id ? entityNode : e) }))

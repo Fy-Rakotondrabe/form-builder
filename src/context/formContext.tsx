@@ -29,6 +29,9 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
   const { pages, entityNodes, setPage, setEntityNode, removeEntityNode, removePage, removePageControl } = useStore();
 
   const init = useCallback((value: Form[]) => {
+    setEntityNode(null);
+    setPage(null);
+
     let initialNodes = [];
     let initialEdges = [];
 
@@ -45,11 +48,6 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
         }
       }
       setEntityNode(form.entity)
-
-      console.log({
-        entityNode,
-        entity: form.entity
-      })
 
       const pageNodes = form.pages.map((page) => {
         setPage(page);
@@ -73,15 +71,13 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
         target: page.id
       }))
 
-      
-
       initialNodes = [...initialNodes, entityNode, ...pageNodes]
       initialEdges = [...initialEdges, ...pageEdges]
     });
 
     setNodes((prevNodes) => [...prevNodes, ...initialNodes]);
     setEdges((prevEdges) => [...prevEdges, ...initialEdges])
-  }, [setNodes, setEdges]);
+  }, [setNodes, setEdges, setEntityNode, setPage]);
 
   const removeNode = useCallback((nodeId: string) => {
     setNodes((nodes) => nodes.filter((node) => node.id !== nodeId));
@@ -109,7 +105,6 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
 
   const generateForm = useCallback(() => {
     const formsData: Form[] = [];
-
     try {
       entityNodes.forEach((entity) => {
         const entityNode = nodes.find(item => item.id === entity.nodeId);

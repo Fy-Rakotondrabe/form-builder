@@ -45,7 +45,7 @@ export interface StoreProps {
   entities: Entity[];
   entityNodes: Entity[];
   selectedElement: SelectedElement | null;
-  setPage: (value: Page) => void;
+  setPage: (value: Page | null) => void;
   removePage: (id: string) => void;
   updatePage: (page: Page) => void;
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => void;
@@ -53,7 +53,7 @@ export interface StoreProps {
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
   setEntities: (entities: Entity[]) => void;
-  setEntityNode: (entity: Entity) => void;
+  setEntityNode: (entity: Entity | null) => void;
   updateEntityNode: (id: string, entity: Entity) => void;
   removeEntityNode: (entityId: string) => void;
   resetSelected: () => void;

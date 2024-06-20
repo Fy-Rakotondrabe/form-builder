@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import ReactFlow, {
   Background,
@@ -42,8 +42,63 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
     onRemovePage
   } = useFormContext();
 
-  const { entities, setPage, setEntityNode, resetSelected } = useStore();
+  const { entities, pages, selectedElement, setSelectedElement, setPage, setEntityNode, resetSelected } = useStore();
   const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
+
+  const [dataToCopy, setDataToCopy] = useState<Page | null>(null)
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Check if Ctrl or Cmd is pressed along with C or V
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case 'c':
+            if (selectedElement) {
+              const page = pages.find((item) => item.id === selectedElement.id);
+              setDataToCopy(page);
+            }
+            break;
+          case 'v':
+            if (dataToCopy) {
+              const id = uuidv4();
+              const name = dataToCopy.pageName + ' (copy)'
+              setPage({
+                ...dataToCopy,
+                id,
+                pageName: name,
+                index: dataToCopy.index + 1
+              })
+
+              const pageNode = nodes.find((item) => item.id === dataToCopy.id);
+              const node = {
+                id,
+                type: ItemTypes.PAGE,
+                position: {
+                  x: pageNode.position.x + 350,
+                  y: pageNode.position.y
+                },
+                data: {
+                  id,
+                  ...pageNode.data,
+                  label: name,
+                },
+              }
+              setNodes(nodes => [...nodes, node]);
+              setSelectedElement(id, ItemTypes.PAGE, null, null);
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dataToCopy, nodes, pages, selectedElement, setNodes, setPage]);
   
   const connectionRules = useCallback((params, nodes) => {
     const { source, target } = params;
