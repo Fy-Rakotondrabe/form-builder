@@ -1,5 +1,5 @@
 {
-  "name": "dnd-form-builder",
+  "name": "form-flow-builder",
   "version": "1.1.1",
   "type": "module",
   "main": "dist/index.umd.js",
