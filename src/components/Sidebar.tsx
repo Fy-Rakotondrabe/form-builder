@@ -14,7 +14,7 @@ interface SidebarElement {
 const sidebarElements: SidebarElement[] = [
   {
     title: 'Nodes',
-    description: 'Nodes are the building blocks of your form. They can be dragged and dropped inside the dropzone to compose the form and establish the relationship between entities, forms, and pages. Here are some key points to remember:\n\n- **Entity**: An entity can only be connected to one form.\n- **Form**: A form can be connected to one or many pages.\n- **Entity-Page Connection**: An entity cannot be directly connected to a page.',
+    description: 'Nodes are the building blocks of your form. They can be dragged and dropped inside the dropzone to compose the form and establish the relationship between entities, and pages.',
     elements: Nodes,
   },
   {
