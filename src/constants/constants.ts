@@ -4,13 +4,11 @@ export const ItemTypes = {
   FIELD: 'element',
   PAGE: 'page',
   ENTITY: 'entity',
-  FORM: 'form'
 }
 
 export const ElementTypes = {
   PAGE: 'page',
   ENTITY: 'entity',
-  FORM: 'form',
   TEXT: 'text',
   NUMBER: 'numeric',
   DATE: 'date-picker',
@@ -30,11 +28,6 @@ export const Nodes: Element[] = [
     type: ElementTypes.ENTITY,
     label: 'Entity',
     elementType: ItemTypes.ENTITY,
-  },
-  {
-    type: ElementTypes.FORM,
-    label: 'Form',
-    elementType: ItemTypes.FORM,
   },
   {
     type: ElementTypes.PAGE,

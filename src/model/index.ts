@@ -26,6 +26,7 @@ export interface Page {
   pageName: string;
   controls: Control[];
   index: number;
+  position?: XYPosition;
 }
 
 export interface SelectedElement {
@@ -43,18 +44,14 @@ export interface StoreProps {
   pages: Page[];
   entities: Entity[];
   entityNodes: Entity[];
-  forms: Form[];
   selectedElement: SelectedElement | null;
-  setPage: (id: string) => void;
+  setPage: (value: Page) => void;
   removePage: (id: string) => void;
   updatePage: (page: Page) => void;
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => void;
   setPageControls: (pageId: string, item: Element) => void;
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
-  setForms: (id: string) => void;
-  updateForm: (form: Form) => void;
-  removeForm: (formId: string) => void;
   setEntities: (entities: Entity[]) => void;
   setEntityNode: (entity: Entity) => void;
   updateEntityNode: (id: string, entity: Entity) => void;
@@ -62,14 +59,20 @@ export interface StoreProps {
   resetSelected: () => void;
 }
 
+export interface XYPosition {
+  x: number;
+  y: number;
+}
+
 export interface Entity {
   name: string;
   id: string;
-  nodeId: string;
+  nodeId?: string;
+  position?: XYPosition
 }
 
 export interface Form {
   id: string;
   pages: Page[];
-  entity: string;
+  entity: Entity;
 }

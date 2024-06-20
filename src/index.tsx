@@ -13,12 +13,13 @@ import './index.css';
 import { FormProvider } from './context/formContext';
 
 interface FormBuilderProps {
+  value: Form[];
   entities: Entity[];
   onSave: (data: Form[]) => void;
   onError: (error: string) => void;
 }
 
-const FormBuilder: FC<FormBuilderProps> = ({ entities, onSave, onError }) => {
+const FormBuilder: FC<FormBuilderProps> = ({ value, entities, onSave, onError }) => {
   const { setEntities } = useStore();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const FormBuilder: FC<FormBuilderProps> = ({ entities, onSave, onError }) => {
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <DndProvider backend={HTML5Backend}>
         <FormProvider>
-          <Layout onSave={onSave} onError={onError} />
+          <Layout value={value} onSave={onSave} onError={onError} />
         </FormProvider>
       </DndProvider>
     </LocalizationProvider>
