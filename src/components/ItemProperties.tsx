@@ -13,7 +13,6 @@ const ItemProperties = () => {
     pages, 
     entities, 
     entityNodes, 
-    forms, 
     updatePage, 
     updatePageControls, 
     updateEntityNode,
@@ -21,7 +20,6 @@ const ItemProperties = () => {
   } = useStore();
   const {
     onRemoveEntityNode,
-    onRemoveForm,
     onRemovePage,
     onRemovePageControl
   } = useFormContext();
@@ -38,9 +36,6 @@ const ItemProperties = () => {
       case ItemTypes.ENTITY:
         setItem(entityNodes.find((entity) => entity.nodeId === selectedElement.id));
         break;
-      case ItemTypes.FORM:
-        setItem(forms.find((form) => form.id === selectedElement.id));
-        break;
       default:
         if (selectedElement?.parentType === ItemTypes.PAGE) {
           const parent = pages.find((page) => page.id === selectedElement.parentId);
@@ -48,7 +43,7 @@ const ItemProperties = () => {
         }
         break;
     }
-  }, [entityNodes, forms, pages, selectedElement])
+  }, [entityNodes, pages, selectedElement])
 
   const handleChange = useCallback((e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
@@ -79,16 +74,13 @@ const ItemProperties = () => {
       case ItemTypes.ENTITY:
         onRemoveEntityNode((item as Entity).nodeId)
         break;
-      case ItemTypes.FORM:
-        onRemoveForm(item.id)
-        break;
       case ItemTypes.FIELD:
         onRemovePageControl(selectedElement?.parentId ?? '', item.id)
         break;
     }
     setItem(null);
     resetSelected();
-  }, [selectedElement?.type, selectedElement?.parentId, resetSelected, onRemovePage, item, onRemoveEntityNode, onRemoveForm, onRemovePageControl])
+  }, [selectedElement?.type, selectedElement?.parentId, resetSelected, onRemovePage, item, onRemoveEntityNode, onRemovePageControl])
 
   const renderSettingView = useCallback(() => {
     switch (type) {
@@ -130,13 +122,6 @@ const ItemProperties = () => {
                 <MenuItem value={entity.id}>{entity.name}</MenuItem>
               ))}
             </Select>
-          </>
-        );
-      case ItemTypes.FORM:
-        return (
-          <>
-            <Typography>Form</Typography>
-            <Typography variant="caption">Id: {(item as Form)?.id}</Typography>
           </>
         );
       case ItemTypes.FIELD:

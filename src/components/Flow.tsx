@@ -12,17 +12,15 @@ import ReactFlow, {
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
 import { useFormContext } from '../context/formContext';
-import { Element, Form } from '../model';
+import { Element, Form, Page } from '../model';
 import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
-import FormComponent from './FormComponent';
 import PageComponent from './Page';
 import { Button } from '@mui/material';
 
 
 const nodeTypes = {
   [ItemTypes.ENTITY]: EntityComponent,
-  [ItemTypes.FORM]: FormComponent,
   [ItemTypes.PAGE]: PageComponent,
 };
 
@@ -41,30 +39,18 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
     onEdgesChange,
     generateForm,
     onRemoveEntityNode,
-    onRemoveForm,
     onRemovePage
   } = useFormContext();
 
-  const { entities, setPage, setForms, setEntityNode, resetSelected } = useStore();
+  const { entities, setPage, setEntityNode, resetSelected } = useStore();
   const [transform, setTransform] = useState({ x: 0, y: 0, zoom: 1 });
   
-  const connectionRules = useCallback((params, nodes, edges) => {
+  const connectionRules = useCallback((params, nodes) => {
     const { source, target } = params;
     const sourceNode = nodes.find(n => n.id === source);
     const targetNode = nodes.find(n => n.id === target);
 
-    if (sourceNode.type === ItemTypes.ENTITY) {
-      const existingConnections = edges.filter(e => e.source === source);
-      if (existingConnections.length >= 1) {
-        onError('This node can only connect to one node. (Select edge and press Del to remove it)');
-        return false; // Prevent connection
-      }
-    }
-
-    if ((sourceNode.type === ItemTypes.ENTITY && targetNode.type === ItemTypes.FORM) || (sourceNode.type === ItemTypes.FORM && targetNode.type === ItemTypes.ENTITY)) {
-      // Allow the connection
-      return true
-    } else if ((sourceNode.type === ItemTypes.FORM && targetNode.type === ItemTypes.PAGE) || (sourceNode.type === ItemTypes.PAGE && targetNode.type === ItemTypes.FORM)) {
+    if ((sourceNode.type === ItemTypes.ENTITY && targetNode.type === ItemTypes.PAGE) || (sourceNode.type === ItemTypes.PAGE && targetNode.type === ItemTypes.ENTITY)) {
       // Allow the connection
       return true
     } else {
@@ -76,15 +62,15 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
 
   const onConnect = useCallback(
     (params) => {
-      if (connectionRules(params, nodes, edges)) {
+      if (connectionRules(params, nodes)) {
         setEdges((eds) => addEdge(params, eds))
       }
     },
-    [connectionRules, edges, nodes, setEdges],
+    [connectionRules, nodes, setEdges],
   );
 
   const [{ isOver }, drop] = useDrop(() => ({
-    accept: [ItemTypes.PAGE, ItemTypes.ENTITY, ItemTypes.FORM],
+    accept: [ItemTypes.PAGE, ItemTypes.ENTITY],
     drop: (item: Element, monitor) => {
       const didDrop = monitor.didDrop()
       if (didDrop) {
@@ -107,14 +93,18 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
       const entity = entities[0];
 
       switch (item.type) {
-        case ItemTypes.PAGE:
-          setPage(id);
+        case ItemTypes.PAGE: {
+          const page: Page = {
+            id: id,
+            pageName: 'New Page',
+            controls: [],
+            index: null,
+          }
+          setPage(page);
           break;
+        }
         case ItemTypes.ENTITY:
           setEntityNode({...entity, nodeId: id});
-          break;
-        case ItemTypes.FORM:
-          setForms(id);
           break;
       }
     },
@@ -132,12 +122,9 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
       case ItemTypes.ENTITY:
         onRemoveEntityNode(node.id)
         break;
-      case ItemTypes.FORM:
-        onRemoveForm(node.id)
-        break;
     }
     resetSelected();
-  }, [onRemoveEntityNode, onRemoveForm, onRemovePage, resetSelected])
+  }, [onRemoveEntityNode, onRemovePage, resetSelected])
 
   const onMoveEnd = useCallback((params) => {
     setTransform(params);
