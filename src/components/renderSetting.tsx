@@ -16,7 +16,7 @@ export function renderSetting(
     value,
     label,
     formula,
-    index
+    index,
   } = control;
 
   switch (type) {
@@ -41,6 +41,19 @@ export function renderSetting(
             onChange={handleChange}
             fullWidth
           />
+          <FormControl fullWidth sx={{ mt: 4 }}>
+            <InputLabel id="format-select-label">Format</InputLabel>
+            <Select
+              labelId="format-select-label"
+              id="format-select"
+              value={format}
+              label="Format"
+              onChange={(e) => handleChange({ target: { name: 'format', value: e.target.value } } as any)}
+            >
+              <MenuItem value={'short'}>Short</MenuItem>
+              <MenuItem value={'multi-line'}>Multi Line</MenuItem>
+            </Select>
+          </FormControl>
           <TextField 
             label="Default Value" 
             name="value"

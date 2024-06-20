@@ -36,11 +36,12 @@ export function renderControl(
           label={label}
           placeholder={placeholder}
           multiline={format === 'multi-line'}
-          style={format === 'multi-line' ? { height: 100 } : {}}
+          style={format === 'multi-line' ? { height: 100, marginBottom: 24 } : {}}
           rows={format === 'multi-line' ? 4 : 0}
           variant="outlined"
           required={!!required}
           value={value}
+          sx={{ my: 1 }}
         />
       );
     case 'reading':

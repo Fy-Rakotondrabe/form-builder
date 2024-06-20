@@ -162,6 +162,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
           setEntityNode({...entity, nodeId: id});
           break;
       }
+      setSelectedElement(id, item.type, null, null)
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

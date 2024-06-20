@@ -40,7 +40,7 @@ export const useStore = create<StoreProps>((set, get) => ({
       placeholder: item.label,
       required: false,
       format: 'single',
-      options: ['A', 'B'],
+      options: [],
       index: lastReadingIndex + 1
     }
     set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: [...p.controls, newControl] }) : p) }))
