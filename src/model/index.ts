@@ -1,4 +1,4 @@
-export interface Element {
+export interface Field {
   type: string;
   elementType: string;
   label: string;
@@ -21,10 +21,16 @@ export interface Control {
   index?: number
 }
 
+export interface AccordionControl {
+  id: string;
+  label: string;
+  controls: Control[];
+}
+
 export interface Page {
   id: string;
   pageName: string;
-  controls: Control[];
+  controls: (Control | AccordionControl)[];
   index: number;
   position?: XYPosition;
 }
@@ -34,6 +40,7 @@ export interface SelectedElement {
   type: string;
   parentId: string | null;
   parentType: string | null;
+  accordionId?: string;
 }
 
 export interface Form {
@@ -49,7 +56,7 @@ export interface StoreProps {
   removePage: (id: string) => void;
   updatePage: (page: Page) => void;
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => void;
-  setPageControls: (pageId: string, item: Element) => void;
+  setPageControls: (pageId: string, item: Field) => void;
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
   setEntities: (entities: Entity[]) => void;
@@ -57,6 +64,7 @@ export interface StoreProps {
   updateEntityNode: (id: string, entity: Entity) => void;
   removeEntityNode: (entityId: string) => void;
   resetSelected: () => void;
+  setSelectedAccordionControl: (pageId: string, accordionId: string, controlId: string) => void;
 }
 
 export interface XYPosition {

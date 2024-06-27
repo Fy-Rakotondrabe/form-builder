@@ -1,12 +1,13 @@
-import { Element } from "../model"
+import { Field } from "../model"
 
 export const ItemTypes = {
   FIELD: 'element',
   PAGE: 'page',
   ENTITY: 'entity',
+  ACCORDION: 'accordion'
 }
 
-export const ElementTypes = {
+export const FieldTypes = {
   PAGE: 'page',
   ENTITY: 'entity',
   TEXT: 'text',
@@ -20,80 +21,86 @@ export const ElementTypes = {
   CHOICE: 'choice',
   PHOTO: 'photo',
   CALCULATED: 'calculated',
-  READING: 'reading'
+  READING: 'reading',
+  ACCORDION: 'accordion'
 }
 
-export const Nodes: Element[] = [
+export const Nodes: Field[] = [
   {
-    type: ElementTypes.ENTITY,
+    type: FieldTypes.ENTITY,
     label: 'Entity',
     elementType: ItemTypes.ENTITY,
   },
   {
-    type: ElementTypes.PAGE,
+    type: FieldTypes.PAGE,
     label: 'Page',
     elementType: ItemTypes.PAGE,
   }
 ]
 
-export const Fields: Element[] = [
+export const Fields: Field[] = [
   {
-    type: ElementTypes.TEXT,
+    type: FieldTypes.TEXT,
     label: 'Text',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.NUMBER,
+    type: FieldTypes.NUMBER,
     label: 'Number',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.DATE,
+    type: FieldTypes.DATE,
     label: 'Date',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.TIME,
+    type: FieldTypes.TIME,
     label: 'Time',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.PHOTO,
+    type: FieldTypes.PHOTO,
     label: 'Photo',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.CALCULATED,
+    type: FieldTypes.CALCULATED,
     label: 'Calculated',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.BARCODE_SCAN,
+    type: FieldTypes.BARCODE_SCAN,
     label: 'Barcode Scan',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.CHOICE,
+    type: FieldTypes.CHOICE,
     label: 'Choice',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.GEOLOCATION,
+    type: FieldTypes.GEOLOCATION,
     label: 'Geolocation',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.MARKDOWN,
+    type: FieldTypes.MARKDOWN,
     label: 'Markdown',
     elementType: ItemTypes.FIELD,
   },
   {
-    type: ElementTypes.CHECKBOX,
+    type: FieldTypes.CHECKBOX,
     label: 'Checkbox',
     elementType: ItemTypes.FIELD,
   },
+    {
+    type: FieldTypes.ACCORDION,
+    label: 'Accordion',
+    elementType: ItemTypes.ACCORDION,
+  },
   {
-    type: ElementTypes.READING,
+    type: FieldTypes.READING,
     label: 'Reading',
     elementType: ItemTypes.FIELD,
   }

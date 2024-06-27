@@ -2,9 +2,9 @@ import { createContext, useContext, FC, ReactNode } from "react";
 import { useEdgesState, useNodesState, Node, Edge } from "reactflow";
 import { useStore } from "../store/store";
 import { useCallback } from "react";
-import { Form } from "../model";
+import { AccordionControl, Form, SelectedElement } from "../model";
 import { v4 as uuidv4 } from 'uuid';
-import { ElementTypes, ItemTypes } from "../constants/constants";
+import { FieldTypes, ItemTypes } from "../constants/constants";
 
 interface FormContextType {
   nodes: Node[];
@@ -19,6 +19,8 @@ interface FormContextType {
   onRemoveForm: (id: string) => void;
   onRemovePage: (id: string) => void;
   onRemovePageControl: (parentId: string, id: string) => void;
+  onRemoveAccordionControl: (selectedElement: SelectedElement) => void;
+  updateAccordionControls: (selectedElement: SelectedElement, data: any) => void;
 }
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
@@ -26,7 +28,7 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { pages, entityNodes, setPage, setEntityNode, removeEntityNode, removePage, removePageControl } = useStore();
+  const { pages, entityNodes, setPage, setEntityNode, removeEntityNode, removePage, removePageControl, updatePage } = useStore();
 
   const init = useCallback((value: Form[]) => {
     setEntityNode(null);
@@ -39,10 +41,10 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
       const entityNode = {
         id: form.entity.nodeId,
         position: form.entity.position,
-        type: ElementTypes.ENTITY,
+        type: FieldTypes.ENTITY,
         data: {
           id: form.entity.nodeId,
-          type: ElementTypes.ENTITY,
+          type: FieldTypes.ENTITY,
           label: form.entity.name,
           elementType: ItemTypes.ENTITY,
         }
@@ -54,10 +56,10 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
         const pageNode = {
           id: page.id,
           position: page.position,
-          type: ElementTypes.PAGE,
+          type: FieldTypes.PAGE,
           data: {
             id: page.id,
-            type: ElementTypes.PAGE,
+            type: FieldTypes.PAGE,
             label: page.pageName,
             elementType: ItemTypes.PAGE,
           }
@@ -103,6 +105,22 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
     removePageControl(parentId, id);
   }, [removePageControl]);
 
+  const onRemoveAccordionControl = useCallback((selectedElement: SelectedElement) => {
+    const page = pages.find(p => p.id === selectedElement?.parentId);
+    updatePage({
+      ...page,
+      controls: page?.controls
+        .map((c) => c.id === selectedElement?.accordionId 
+          ? ({ 
+              ...c, 
+              controls: (c as AccordionControl)?.controls
+                .filter((ac) => ac.id !== selectedElement?.id) 
+            }) 
+          : c
+        )
+    })
+  }, [pages, updatePage])
+
   const generateForm = useCallback(() => {
     const formsData: Form[] = [];
     try {
@@ -135,6 +153,22 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
     }
   }, [edges, entityNodes, nodes, pages])
 
+  const updateAccordionControls = useCallback((selectedElement: SelectedElement, data: any) => {
+    const page = pages.find(p => p.id === selectedElement?.parentId);
+    updatePage({
+      ...page,
+      controls: page?.controls
+        .map((c) => c.id === selectedElement?.accordionId 
+          ? ({ 
+              ...c, 
+              controls: (c as AccordionControl)?.controls
+                .map((ac) => ac.id === selectedElement?.id ? ({ ...ac, ...data }) : ac) 
+            }) 
+          : c
+        )
+    })
+  }, [pages, updatePage])
+
   const contextValue = {
     nodes,
     edges,
@@ -146,7 +180,9 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
     generateForm,
     onRemoveEntityNode,
     onRemovePage,
-    onRemovePageControl
+    onRemovePageControl,
+    onRemoveAccordionControl,
+    updateAccordionControls
   };
 
   return (

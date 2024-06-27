@@ -9,10 +9,11 @@ import SelectComponent from './fields/Select';
 import TextField from './fields/TextField';
 import { Control } from '../model';
 import Reading from './fields/Reading';
+import AccordionField from './fields/AccordionField';
 
 export function renderControl(
   control: Control,
-  tableId: string = '',
+  pageId: string,
 ) {  
   const {
     type,
@@ -24,6 +25,7 @@ export function renderControl(
     required,
     value,
     index,
+    id,
   } = control;
 
   const label = required ? `${control.label} *` : control.label;
@@ -39,7 +41,6 @@ export function renderControl(
           style={format === 'multi-line' ? { height: 100, marginBottom: 24 } : {}}
           rows={format === 'multi-line' ? 4 : 0}
           variant="outlined"
-          required={!!required}
           value={value}
           sx={{ my: 1 }}
         />
@@ -74,7 +75,6 @@ export function renderControl(
             endAdornment: suffix ? <InputAdornment position="end">{suffix}</InputAdornment> : undefined,
           }}
           variant="outlined"
-          required={!!required}
           value={value?.toString()}
           fullWidth
           sx={{ my: 1 }}
@@ -108,7 +108,7 @@ export function renderControl(
     case 'photo':
       return (
         <ImageInput
-          type={tableId === '' ? 'basic' : 'table'}
+          type={'basic'}
           value={value}
         />
       );
@@ -116,6 +116,14 @@ export function renderControl(
       return (
         <CalculatedField
           label={label ?? ''}
+        />
+      );
+    case 'accordion':
+      return (
+        <AccordionField
+          label={label ?? ''}
+          pageId={pageId}
+          id={id}
         />
       );
     default:

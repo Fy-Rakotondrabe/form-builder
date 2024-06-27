@@ -1,9 +1,9 @@
 import { FC } from "react"
-import { Element } from "../model"
+import { Field } from "../model"
 import { useDrag } from "react-dnd"
 
 interface ElementProps {
-  element: Element
+  element: Field
 }
 
 const ElementItem: FC<ElementProps> = ({ element }) => {
