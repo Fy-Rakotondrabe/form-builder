@@ -7,6 +7,7 @@ export const useStyles = makeStyles({
   multipleChoice: {
     display: 'flex',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 4,
     marginVertical: 4
   },
