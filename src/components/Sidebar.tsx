@@ -2,13 +2,13 @@ import InfoIcon from '@mui/icons-material/InfoOutlined';
 import { Box, Tooltip, Typography } from "@mui/material";
 import MarkdownPreviewer from '@uiw/react-markdown-preview';
 import { Fields, Nodes } from "../constants/constants";
-import { Element } from "../model";
+import { Field } from "../model";
 import FormElementItem from "./Element";
 
 interface SidebarElement {
   title: string;
   description: string;
-  elements: Element[];
+  elements: Field[];
 }
 
 const sidebarElements: SidebarElement[] = [

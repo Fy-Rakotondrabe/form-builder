@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../store/store"
 import { ItemTypes } from "../constants/constants";
 import { Button, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { Control, Entity, Form, Page } from "../model";
+import { AccordionControl, Control, Entity, Form, Page } from "../model";
 import { renderSetting } from "./renderSetting";
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { useFormContext } from "../context/formContext";
@@ -21,10 +21,12 @@ const ItemProperties = () => {
   const {
     onRemoveEntityNode,
     onRemovePage,
-    onRemovePageControl
+    onRemovePageControl,
+    onRemoveAccordionControl,
+    updateAccordionControls,
   } = useFormContext();
   const [type, setType] = useState(ItemTypes.PAGE);
-  const [item, setItem] = useState<Page | Control | Entity | Form | undefined>(undefined);
+  const [item, setItem] = useState<Page | Control | Entity | Form | AccordionControl | undefined>(undefined);
 
   useEffect(() => {
     setType(selectedElement?.type as any);
@@ -39,7 +41,12 @@ const ItemProperties = () => {
       default:
         if (selectedElement?.parentType === ItemTypes.PAGE) {
           const parent = pages.find((page) => page.id === selectedElement.parentId);
-          setItem(parent?.controls.find(item => item.id === selectedElement.id));
+          setItem(parent?.controls.find(item => item.id === selectedElement.id) as Control);
+        } else if (selectedElement?.parentType === ItemTypes.ACCORDION) {
+          const parent = pages.find((page) => page.id === selectedElement.parentId);
+          const accordion: AccordionControl = parent?.controls.find((c) => c.id === selectedElement.accordionId) as AccordionControl;
+          const accordionControl = accordion?.controls.find((c) => c.id === selectedElement.id);
+          setItem(accordionControl);
         }
         break;
     }
@@ -53,8 +60,15 @@ const ItemProperties = () => {
       case ItemTypes.PAGE:
         updatePage(data);
         break;
-      case ItemTypes.FIELD:
+      case ItemTypes.ACCORDION:
         updatePageControls(selectedElement?.parentId ?? '', data);
+        break;
+      case ItemTypes.FIELD:
+        if (selectedElement.accordionId) {
+          updateAccordionControls(selectedElement, data);
+        } else {
+          updatePageControls(selectedElement?.parentId ?? '', data);
+        }
         break;
       case ItemTypes.ENTITY: {
         const entity = entities.find(item => item.id === value);
@@ -74,16 +88,35 @@ const ItemProperties = () => {
       case ItemTypes.ENTITY:
         onRemoveEntityNode((item as Entity).nodeId)
         break;
+      case ItemTypes.ACCORDION:
       case ItemTypes.FIELD:
-        onRemovePageControl(selectedElement?.parentId ?? '', item.id)
+        if (selectedElement?.accordionId) {
+          onRemoveAccordionControl(selectedElement);
+        } else {
+          onRemovePageControl(selectedElement?.parentId ?? '', item.id)
+        }
         break;
     }
     setItem(null);
     resetSelected();
-  }, [selectedElement?.type, selectedElement?.parentId, resetSelected, onRemovePage, item, onRemoveEntityNode, onRemovePageControl])
+  }, [selectedElement, resetSelected, onRemovePage, item, onRemoveEntityNode, onRemoveAccordionControl, onRemovePageControl])
 
   const renderSettingView = useCallback(() => {
     switch (type) {
+      case ItemTypes.ACCORDION:
+        return (
+          <>
+            <Typography>Accordion</Typography>
+            <TextField 
+              label="Label" 
+              name="label"
+              value={(item as AccordionControl).label} 
+              sx={{ mt: 4 }}
+              onChange={handleChange}
+              fullWidth
+            />
+          </>
+        );
       case ItemTypes.PAGE:
         return (
           <>

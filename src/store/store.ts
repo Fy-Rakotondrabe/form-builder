@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from "uuid";
-import { Control, Element, Entity, Page, StoreProps } from '../model'
+import { AccordionControl, Control, Field, Entity, Page, StoreProps } from '../model'
+import { FieldTypes, ItemTypes } from '../constants/constants';
 
 export const useStore = create<StoreProps>((set, get) => ({
   pages: [],
@@ -29,19 +30,30 @@ export const useStore = create<StoreProps>((set, get) => ({
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => {
     set((state) => ({ ...state, selectedElement: { id, type, parentId, parentType } }))
   },
-  setPageControls: (pageId: string, item: Element) => {
+  setPageControls: (pageId: string, item: Field) => {
     const controls = get().pages.find((p) => p.id === pageId)?.controls ?? [];
-    const lastReadingIndex = controls.filter((c) => c.type === 'reading').map(item => item.index).reduce((a, b) => Math.max(a, b), 0);
-    const newControl: Control = {
-      id: uuidv4(),
-      type: item.type,
-      label: item.label,
-      value: '',
-      placeholder: item.label,
-      required: false,
-      format: 'single',
-      options: [],
-      index: lastReadingIndex + 1
+    const lastReadingIndex = controls.filter((c: Control) => c.type === FieldTypes.READING).map((item: Control) => item.index).reduce((a, b) => Math.max(a, b), 0);
+    let newControl: Control | AccordionControl
+
+    if (item.type === FieldTypes.ACCORDION) {
+      newControl = {
+        id: uuidv4(),
+        type: item.type,
+        label: item.label,
+        controls: [],
+      }
+    } else {
+      newControl = {
+        id: uuidv4(),
+        type: item.type,
+        label: item.label,
+        value: '',
+        placeholder: item.label,
+        required: false,
+        format: 'single',
+        options: [],
+        index: item.type === FieldTypes.READING ? lastReadingIndex + 1 : null,
+      }
     }
     set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: [...p.controls, newControl] }) : p) }))
   },
@@ -80,5 +92,8 @@ export const useStore = create<StoreProps>((set, get) => ({
   },
   resetSelected: () => {
     set((state) => ({ ...state, selectedElement: null }))
-  }
+  },
+  setSelectedAccordionControl: (pageId, accordionId, controlId) => {
+    set((state) => ({ ...state, selectedElement: { id: controlId, type: ItemTypes.FIELD, parentId: pageId, parentType: ItemTypes.ACCORDION, accordionId } }))
+  },
 }))

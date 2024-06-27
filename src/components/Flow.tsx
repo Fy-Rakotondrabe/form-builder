@@ -12,7 +12,7 @@ import ReactFlow, {
 import { v4 as uuidv4 } from 'uuid';
 import { ItemTypes } from '../constants/constants';
 import { useFormContext } from '../context/formContext';
-import { Element, Form, Page } from '../model';
+import { Field, Form, Page } from '../model';
 import { useStore } from '../store/store';
 import EntityComponent from './EntityComponent';
 import PageComponent from './Page';
@@ -126,7 +126,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [ItemTypes.PAGE, ItemTypes.ENTITY],
-    drop: (item: Element, monitor) => {
+    drop: (item: Field, monitor) => {
       const didDrop = monitor.didDrop()
       if (didDrop) {
         return
