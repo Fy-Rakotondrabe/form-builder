@@ -11,6 +11,8 @@ const entities = [
   {name: "Entity-2", id: "2"}
 ]
 
+const entityType = ['table', 'list']
+
 const value: Form[] = [
     {
         "pages": [
@@ -151,6 +153,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <FormBuilder 
         value={value} 
         entities={entities} 
+        entityType={entityType}
         onSave={(data) => console.log(data)} 
         onError={(error) => console.log(error)} 
       />

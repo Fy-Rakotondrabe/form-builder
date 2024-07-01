@@ -15,16 +15,18 @@ import { FormProvider } from './context/formContext';
 interface FormBuilderProps {
   value: Form[];
   entities: Entity[];
+  entityType: string[];
   onSave: (data: Form[]) => void;
   onError: (error: string) => void;
 }
 
-const FormBuilder: FC<FormBuilderProps> = ({ value, entities, onSave, onError }) => {
-  const { setEntities } = useStore();
+const FormBuilder: FC<FormBuilderProps> = ({ value, entities, entityType, onSave, onError }) => {
+  const { setEntities, setEntityType } = useStore();
 
   useEffect(() => {
     setEntities(entities);
-  }, [entities, setEntities]);
+    setEntityType(entityType);
+  }, [entities, entityType, setEntities, setEntityType]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>

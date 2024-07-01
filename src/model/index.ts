@@ -51,6 +51,7 @@ export interface StoreProps {
   pages: Page[];
   entities: Entity[];
   entityNodes: Entity[];
+  entityType: string[];
   selectedElement: SelectedElement | null;
   setPage: (value: Page | null) => void;
   removePage: (id: string) => void;
@@ -60,6 +61,7 @@ export interface StoreProps {
   updatePageControls: (pageId: string, control: Control) => void;
   removePageControl: (pageId: string, controlId: string) => void;
   setEntities: (entities: Entity[]) => void;
+  setEntityType: (type: string[]) => void;
   setEntityNode: (entity: Entity | null) => void;
   updateEntityNode: (id: string, entity: Entity) => void;
   removeEntityNode: (entityId: string) => void;
@@ -76,6 +78,7 @@ export interface Entity {
   name: string;
   id: string;
   nodeId?: string;
+  displayType?: string;
   position?: XYPosition
 }
 

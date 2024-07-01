@@ -1,6 +1,11 @@
 import { Autocomplete, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Control } from "../model";
 
+const selectFormat = [
+  {label: 'Single choice', value: 'single'},
+  {label: 'Multiple choice', value: 'multiple'}
+]
+
 export function renderSetting(
   control: Control,
   handleChange: (e: React.ChangeEvent<any>) => void,
@@ -249,6 +254,7 @@ export function renderSetting(
         </>
       );
     case 'choice':
+      console.log(format)
       return (
         <>
           <Typography>Multiple Choice</Typography>
@@ -260,6 +266,17 @@ export function renderSetting(
             onChange={handleChange}
             fullWidth
           />
+          <Select
+            value={format}
+            onChange={handleChange}
+            fullWidth
+            name="format"
+            sx={{ mt: 4 }}
+          >
+            {selectFormat.map((format) => (
+              <MenuItem value={format.value}>{format.label}</MenuItem>
+            ))}
+          </Select>
           <Autocomplete
             multiple
             id="tags-outlined"

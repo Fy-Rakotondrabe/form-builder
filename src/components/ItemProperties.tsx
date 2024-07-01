@@ -12,6 +12,7 @@ const ItemProperties = () => {
     selectedElement, 
     pages, 
     entities, 
+    entityType,
     entityNodes, 
     updatePage, 
     updatePageControls, 
@@ -72,13 +73,13 @@ const ItemProperties = () => {
         break;
       case ItemTypes.ENTITY: {
         const entity = entities.find(item => item.id === value);
-        updateEntityNode(selectedElement?.id, {...entity, nodeId: selectedElement?.id});
+        updateEntityNode(selectedElement?.id, {...entity, ...data, nodeId: selectedElement?.id});
         break;
       }
       default:
         break;
     }
-  }, [entities, item, selectedElement?.id, selectedElement?.parentId, selectedElement?.type, updateEntityNode, updatePage, updatePageControls])
+  }, [entities, item, selectedElement, updateAccordionControls, updateEntityNode, updatePage, updatePageControls])
 
   const handleRemove = useCallback(() => {
     switch (selectedElement?.type) {
@@ -153,6 +154,17 @@ const ItemProperties = () => {
             >
               {entities.map((entity) => (
                 <MenuItem value={entity.id}>{entity.name}</MenuItem>
+              ))}
+            </Select>
+            <Select
+              value={(item as Entity)?.displayType}
+              onChange={handleChange}
+              fullWidth
+              name="displayType"
+              sx={{ mt: 4 }}
+            >
+              {entityType.map((entity) => (
+                <MenuItem value={entity}>{entity}</MenuItem>
               ))}
             </Select>
           </>

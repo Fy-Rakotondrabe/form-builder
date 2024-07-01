@@ -8,6 +8,7 @@ export const useStore = create<StoreProps>((set, get) => ({
   selectedElement: null,
   entities: [],
   entityNodes: [],
+  entityType: [],
   setPage: (value: Page | null) => {
     if (value) {
       const pages = get().pages;
@@ -96,4 +97,7 @@ export const useStore = create<StoreProps>((set, get) => ({
   setSelectedAccordionControl: (pageId, accordionId, controlId) => {
     set((state) => ({ ...state, selectedElement: { id: controlId, type: ItemTypes.FIELD, parentId: pageId, parentType: ItemTypes.ACCORDION, accordionId } }))
   },
+  setEntityType: (type) => {
+    set((state) => ({ ...state, entityType: type }))
+  }
 }))

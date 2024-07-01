@@ -99,10 +99,10 @@ export const Fields: Field[] = [
     label: 'Accordion',
     elementType: ItemTypes.ACCORDION,
   },
-  {
-    type: FieldTypes.READING,
-    label: 'Reading',
-    elementType: ItemTypes.FIELD,
-  }
+  // {
+  //   type: FieldTypes.READING,
+  //   label: 'Reading',
+  //   elementType: ItemTypes.FIELD,
+  // }
 ]
 

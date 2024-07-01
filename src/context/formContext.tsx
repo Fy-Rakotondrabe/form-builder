@@ -147,6 +147,7 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
           },
         })
       })
+      console.log(formsData)
       return formsData
     } catch (e) {
       throw('Close all nodes before saving (Entity -> Form -> Pages)');
