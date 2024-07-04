@@ -266,17 +266,22 @@ export function renderSetting(
             onChange={handleChange}
             fullWidth
           />
-          <Select
-            value={format}
-            onChange={handleChange}
-            fullWidth
-            name="format"
-            sx={{ mt: 4 }}
-          >
-            {selectFormat.map((format) => (
-              <MenuItem value={format.value}>{format.label}</MenuItem>
-            ))}
-          </Select>
+          <FormControl fullWidth sx={{ mt: 3 }}>
+            <InputLabel id="format">Format</InputLabel>
+            <Select
+              value={format}
+              labelId="format"
+              onChange={handleChange}
+              fullWidth
+              name="format"
+              label="Format"
+              placeholder="Format"
+            >
+              {selectFormat.map((format) => (
+                <MenuItem value={format.value}>{format.label}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Autocomplete
             multiple
             id="tags-outlined"
