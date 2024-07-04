@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../store/store"
 import { ItemTypes } from "../constants/constants";
-import { Button, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { AccordionControl, Control, Entity, Form, Page } from "../model";
 import { renderSetting } from "./renderSetting";
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { useFormContext } from "../context/formContext";
+import EntityProperties from "./EntityProperties";
 
 const ItemProperties = () => {
   const { 
     selectedElement, 
     pages, 
     entities, 
-    entityType,
     entityNodes, 
     updatePage, 
     updatePageControls, 
@@ -142,39 +142,13 @@ const ItemProperties = () => {
           </>
         );
       case ItemTypes.ENTITY:
-        return (
-          <>
-            <Typography>Entity</Typography>
-            <Select
-              value={(item as Entity)?.id}
-              onChange={handleChange}
-              fullWidth
-              name="id"
-              sx={{ mt: 4 }}
-            >
-              {entities.map((entity) => (
-                <MenuItem value={entity.id}>{entity.name}</MenuItem>
-              ))}
-            </Select>
-            <Select
-              value={(item as Entity)?.displayType}
-              onChange={handleChange}
-              fullWidth
-              name="displayType"
-              sx={{ mt: 4 }}
-            >
-              {entityType.map((entity) => (
-                <MenuItem value={entity}>{entity}</MenuItem>
-              ))}
-            </Select>
-          </>
-        );
+        return <EntityProperties handleChange={handleChange} item={item as Entity} />;
       case ItemTypes.FIELD:
         return renderSetting(item as Control, handleChange);
       default:
         return <></>;
     }
-  }, [entities, handleChange, item, type])
+  }, [handleChange, item, type])
 
   return (
     <div className="item-properties-container">

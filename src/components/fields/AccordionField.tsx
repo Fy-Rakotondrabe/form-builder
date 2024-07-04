@@ -74,7 +74,7 @@ const AccordionField: FC<AccordionFieldProps> = ({
       }}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography fontSize={10}>{label}</Typography>
+        <Typography fontSize={16} fontWeight="bold">{label}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         {accordion?.controls.map((control) => (

@@ -6,20 +6,28 @@ import { useDrop } from "react-dnd";
 import { renderControl } from "./renderControl";
 import { Box } from "@mui/material";
 import { Handle, Position } from "reactflow";
-import { Control, Field, Page } from "../model";
+import { Control, Entity, Field, Page } from "../model";
+import { useFormContext } from "../context/formContext";
 
 interface PageProps {
   id: string
 }
 
 const PageComponent: FC<PageProps> = ({ id }) => {
-  const { pages, setSelectedElement, setPageControls } = useStore();
+  const { pages, entityNodes, setSelectedElement, setPageControls } = useStore();
   const [page, setPage] = useState<Page | undefined>();
+  const [entity, setEntity] = useState<Entity | undefined>()
+  const { edges } = useFormContext();
 
   useEffect(() => {
-    const match = pages.find((page) => page.id === id);
-    setPage(match);
-  }, [id, pages])
+    const pageMatch = pages.find((page) => page.id === id);
+    setPage(pageMatch);
+    if (entityNodes.length && edges.length) {
+      const pageEdges = edges.find((e) => e.target === pageMatch.id)
+      const entityMatch = entityNodes.find(item => item.nodeId === pageEdges.source);
+      setEntity(entityMatch);
+    }
+  }, [edges, entityNodes, id, page, pages])
 
   const [{ isOverCurrent }, drop] = useDrop(() => ({
     accept: [ItemTypes.FIELD, ItemTypes.ACCORDION],
@@ -28,13 +36,18 @@ const PageComponent: FC<PageProps> = ({ id }) => {
       if (didDrop) {
         return;
       }
-      setPageControls(page?.id ?? '', item);
+      console.log(entity)
+      if (item.type === ItemTypes.ACCORDION && entity.displayType === 'Table') {
+        throw 'Accordion can only be drop on page connected to an entity that have a List as display type'
+      } else {
+        setPageControls(page?.id ?? '', item);
+      }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
-  }), [page]);
+  }), [page, entity]);
 
   if (!page) return <></>;
 
