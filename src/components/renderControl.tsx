@@ -23,7 +23,6 @@ export function renderControl(
     prefix,
     required,
     value,
-    index,
     id,
   } = control;
 
