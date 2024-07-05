@@ -17,7 +17,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   const classes = useStyles();
 
   return (
-    <Box my={2}>
+    <Box>
       <Typography>{label}</Typography>
       <Box className={classes.multipleChoice}>
         {format === 'single'

@@ -26,7 +26,7 @@ const DateTimePickerInput: React.FC<DateTimePickerInputProps> = ({
   }, [value, mode]);
 
   return (
-    <Box my={1} className={classes.container}>
+    <Box className={classes.container}>
       {mode === 'date' ? (
         <DatePicker
           value={date}

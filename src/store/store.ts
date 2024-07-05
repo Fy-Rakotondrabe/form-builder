@@ -30,7 +30,7 @@ export const useStore = create<StoreProps>((set, get) => ({
   setSelectedElement: (id: string, type: string, parentId: string | null, parentType: string | null) => {
     set((state) => ({ ...state, selectedElement: { id, type, parentId, parentType } }))
   },
-  setPageControls: (pageId: string, item: Field) => {
+  setPageControls: (pageId: string, item: Field, index: number) => {
     const controls = get().pages.find((p) => p.id === pageId)?.controls ?? [];
     let newControl: Control | AccordionControl
 
@@ -56,7 +56,9 @@ export const useStore = create<StoreProps>((set, get) => ({
         index: null,
       }
     }
-    set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: [...p.controls, newControl] }) : p) }))
+    const pageControls = get().pages.find(page => page.id === pageId);
+    pageControls.controls.splice(index, 0, newControl);
+    set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? pageControls : p) }))
   },
   updatePageControls: (pageId: string, control: Control) => {
     set((state) => ({

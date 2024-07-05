@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Paper } from '@mui/material';
-import { useStyles } from './style';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Camera, Image } from '@mui/icons-material';
 
@@ -10,10 +9,8 @@ interface ImageInputProps {
 }
 
 const ImageInput: React.FC<ImageInputProps> = () => {
-  const classes = useStyles();
-
   return (
-    <Box className={classes.inputDefaultStyle} sx={{ mb: 2 }}>
+    <Box>
       <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography fontSize={10}>Photo</Typography>

@@ -20,7 +20,6 @@ const CalculatedField: React.FC<CalculatedFieldProps> = ({
         readOnly: true,
       }}
       value={'0'}
-      sx={{ my: 1 }}
     />
   );
 };
