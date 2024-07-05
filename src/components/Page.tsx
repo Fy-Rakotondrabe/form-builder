@@ -36,7 +36,6 @@ const PageComponent: FC<PageProps> = ({ id }) => {
       if (didDrop) {
         return;
       }
-      console.log(entity)
       if (item.type === ItemTypes.ACCORDION && entity.displayType === 'Table') {
         throw 'Accordion can only be drop on page connected to an entity that have a List as display type'
       } else {

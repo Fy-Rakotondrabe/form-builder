@@ -65,7 +65,6 @@ const AccordionField: FC<AccordionFieldProps> = ({
   return (
     <Accordion 
       style={isOverCurrent ? { backgroundColor: 'aliceblue' } : {}} 
-      sx={{ my: 2 }} 
       ref={drop} 
       expanded
       onClick={(e) => {

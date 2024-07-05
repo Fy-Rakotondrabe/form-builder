@@ -24,6 +24,7 @@ export interface Control {
 export interface AccordionControl {
   id: string;
   label: string;
+  index: number;
   controls: Control[];
 }
 

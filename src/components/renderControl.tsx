@@ -1,4 +1,4 @@
-import { TextField as MUITextField, InputAdornment } from '@mui/material';
+import { TextField as MUITextField, InputAdornment, Box } from '@mui/material';
 import BarcodeScanner from './fields/BarCodeScanner';
 import CalculatedField from './fields/CalculatedField';
 import CheckboxField from './fields/Checkbox';
@@ -8,7 +8,6 @@ import LocationInput from './fields/LocationInput';
 import SelectComponent from './fields/Select';
 import TextField from './fields/TextField';
 import { Control } from '../model';
-import Reading from './fields/Reading';
 import AccordionField from './fields/AccordionField';
 
 export function renderControl(
@@ -44,10 +43,6 @@ export function renderControl(
           value={value}
           sx={{ my: 1 }}
         />
-      );
-    case 'reading':
-      return (
-        <Reading label={label} index={index} format={format} suffix={suffix} value={value} />
       );
     case 'checkbox':
       return (
@@ -120,11 +115,13 @@ export function renderControl(
       );
     case 'accordion':
       return (
-        <AccordionField
-          label={label ?? ''}
-          pageId={pageId}
-          id={id}
-        />
+        <Box sx={{ my: 2 }}>
+          <AccordionField
+            label={label ?? ''}
+            pageId={pageId}
+            id={id}
+          />
+        </Box>
       );
     default:
       return null;
