@@ -22,8 +22,8 @@ const PageComponent: FC<PageProps> = ({ id }) => {
   useEffect(() => {
     const pageMatch = pages.find((page) => page.id === id);
     setPage(pageMatch);
-    if (entityNodes.length && edges.length) {
-      const pageEdges = edges.find((e) => e.target === pageMatch.id)
+    if (entityNodes.length && edges.length && pageMatch) {
+      const pageEdges = edges.find((e) => e.target === pageMatch?.id)
       const entityMatch = entityNodes.find(item => item.nodeId === pageEdges.source);
       setEntity(entityMatch);
     }
