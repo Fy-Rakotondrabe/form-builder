@@ -13,8 +13,41 @@ interface PageProps {
   id: string
 }
 
+interface DropZoneProps {
+  page: Page;
+  entity: Entity;
+  index: number;
+}
+
+const DropZone: FC<DropZoneProps> = ({ page, entity, index }) => {
+  const { setPageControls } = useStore()
+
+  const [{ isOverCurrent }, drop] = useDrop(() => ({
+    accept: [ItemTypes.FIELD, ItemTypes.ACCORDION],
+    drop: (item: Field, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (didDrop) {
+        return;
+      }
+      if (item.type === ItemTypes.ACCORDION && entity.displayType === 'Table') {
+        throw 'Accordion can only be drop on page connected to an entity that have a List as display type'
+      } else {
+        setPageControls(page?.id ?? '', item, index);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
+    }),
+  }), [page, entity]);
+
+  return (
+    <Box ref={drop} height={16} width={'100%'} className={classNames({ "over": isOverCurrent })}></Box>
+  );
+}
+
 const PageComponent: FC<PageProps> = ({ id }) => {
-  const { pages, entityNodes, setSelectedElement, setPageControls } = useStore();
+  const { pages, entityNodes, setSelectedElement } = useStore();
   const [page, setPage] = useState<Page | undefined>();
   const [entity, setEntity] = useState<Entity | undefined>()
   const { edges } = useFormContext();
@@ -31,43 +64,24 @@ const PageComponent: FC<PageProps> = ({ id }) => {
     }
   }, [edges, entityNodes, id, page, pages])
 
-  const [{ isOverCurrent }, drop] = useDrop(() => ({
-    accept: [ItemTypes.FIELD, ItemTypes.ACCORDION],
-    drop: (item: Field, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) {
-        return;
-      }
-      if (item.type === ItemTypes.ACCORDION && entity.displayType === 'Table') {
-        throw 'Accordion can only be drop on page connected to an entity that have a List as display type'
-      } else {
-        setPageControls(page?.id ?? '', item);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      isOverCurrent: monitor.isOver({ shallow: true }),
-    }),
-  }), [page, entity]);
-
   if (!page) return <></>;
 
   return (
-    <div 
-      ref={drop}
-      onClick={() => setSelectedElement(page.id, ItemTypes.PAGE, null, null)} 
-      className={classNames("page", { "over": isOverCurrent })}
-    >
+    <div className="page" onClick={() => setSelectedElement(page.id, ItemTypes.PAGE, null, null)}>
       <Handle type="target" position={Position.Left} />
       {page?.pageName}
       <Box sx={{ mt: 3 }}>
-        {page?.controls.map((control) => (
-          <div onClick={(e) => {
-            e.stopPropagation();
-            setSelectedElement(control.id, ItemTypes.FIELD, page.id, ItemTypes.PAGE)
-          }}>
-            {renderControl(control as Control, page.id)}
-          </div>
+        <DropZone index={0} entity={entity} page={page} />
+        {page?.controls.map((control, index) => (
+          <>
+            <div onClick={(e) => {
+              e.stopPropagation();
+              setSelectedElement(control.id, ItemTypes.FIELD, page.id, ItemTypes.PAGE)
+            }}>
+              {renderControl(control as Control, page.id)}
+            </div>
+            <DropZone index={index + 1} entity={entity} page={page} />
+          </>
         ))}
       </Box>
     </div>

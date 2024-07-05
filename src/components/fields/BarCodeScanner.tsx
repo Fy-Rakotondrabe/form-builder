@@ -21,7 +21,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   }, [value]);
 
   return (
-    <Box my={3}>
+    <Box>
       <TextField
         label={label}
         className={classes.inputDefaultStyle}

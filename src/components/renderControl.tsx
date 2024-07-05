@@ -1,4 +1,4 @@
-import { TextField as MUITextField, InputAdornment, Box } from '@mui/material';
+import { TextField as MUITextField, InputAdornment } from '@mui/material';
 import BarcodeScanner from './fields/BarCodeScanner';
 import CalculatedField from './fields/CalculatedField';
 import CheckboxField from './fields/Checkbox';
@@ -40,7 +40,6 @@ export function renderControl(
           rows={format === 'multi-line' ? 4 : 0}
           variant="outlined"
           value={value}
-          sx={{ my: 1 }}
         />
       );
     case 'checkbox':
@@ -71,7 +70,6 @@ export function renderControl(
           variant="outlined"
           value={value?.toString()}
           fullWidth
-          sx={{ my: 1 }}
         />
       );
     case 'choice':
@@ -114,13 +112,11 @@ export function renderControl(
       );
     case 'accordion':
       return (
-        <Box sx={{ my: 2 }}>
-          <AccordionField
-            label={label ?? ''}
-            pageId={pageId}
-            id={id}
-          />
-        </Box>
+        <AccordionField
+          label={label ?? ''}
+          pageId={pageId}
+          id={id}
+        />
       );
     default:
       return null;
