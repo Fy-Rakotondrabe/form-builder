@@ -21,96 +21,11 @@ export function renderSetting(
     value,
     label,
     formula,
-    index,
   } = control;
 
   switch (type) {
     case 'text':
     case 'markdown':
-      return (
-        <>
-          <Typography>Text</Typography>
-          <TextField
-            label="Label" 
-            name="label"
-            value={label} 
-            sx={{ mt: 4 }}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField 
-            label="Placeholder" 
-            name="placeholder"
-            value={placeholder} 
-            sx={{ mt: 4 }}
-            onChange={handleChange}
-            fullWidth
-          />
-          <FormControl fullWidth sx={{ mt: 4 }}>
-            <InputLabel id="format-select-label">Format</InputLabel>
-            <Select
-              labelId="format-select-label"
-              id="format-select"
-              value={format}
-              label="Format"
-              onChange={(e) => handleChange({ target: { name: 'format', value: e.target.value } } as any)}
-            >
-              <MenuItem value={'short'}>Short</MenuItem>
-              <MenuItem value={'multi-line'}>Multi Line</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField 
-            label="Default Value" 
-            name="value"
-            value={value} 
-            sx={{ mt: 4 }}
-            onChange={handleChange}
-            fullWidth
-          />
-          <FormControlLabel  
-            sx={{ mt: 2 }}
-            control={
-              <Checkbox 
-                checked={!!required} 
-                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
-              />
-            }  
-            label="Required" 
-          />
-        </>
-      );
-    case 'reading':
-      return (
-        <>
-          <Typography>Reading</Typography>
-          <TextField
-            label="Label" 
-            name="label"
-            value={label} 
-            sx={{ mt: 4 }}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Reading rank" 
-            name="index"
-            value={index} 
-            sx={{ mt: 4 }}
-            onChange={handleChange}
-            fullWidth
-          />
-          <FormControlLabel  
-            sx={{ mt: 2 }}
-            control={
-              <Checkbox 
-                checked={!!required} 
-                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
-              />
-            }  
-            label="Required" 
-          />
-        </>
-      );
     case 'checkbox':
       return (
         <>

@@ -32,14 +32,15 @@ export const useStore = create<StoreProps>((set, get) => ({
   },
   setPageControls: (pageId: string, item: Field) => {
     const controls = get().pages.find((p) => p.id === pageId)?.controls ?? [];
-    const lastReadingIndex = controls.filter((c: Control) => c.type === FieldTypes.READING).map((item: Control) => item.index).reduce((a, b) => Math.max(a, b), 0);
     let newControl: Control | AccordionControl
 
     if (item.type === FieldTypes.ACCORDION) {
+      const lastAccordionIndex = controls.filter((c: Control) => c.type === FieldTypes.ACCORDION).map((item: Control) => item.index).reduce((a, b) => Math.max(a, b), 0);
       newControl = {
         id: uuidv4(),
         type: item.type,
         label: item.label,
+        index: lastAccordionIndex + 1,
         controls: [],
       }
     } else {
@@ -52,7 +53,7 @@ export const useStore = create<StoreProps>((set, get) => ({
         required: false,
         format: 'single',
         options: [],
-        index: item.type === FieldTypes.READING ? lastReadingIndex + 1 : null,
+        index: null,
       }
     }
     set((state) => ({ ...state, pages: state.pages.map((p) => p.id === pageId ? ({ ...p, controls: [...p.controls, newControl] }) : p) }))

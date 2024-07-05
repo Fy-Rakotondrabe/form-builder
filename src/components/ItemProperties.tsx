@@ -116,6 +116,14 @@ const ItemProperties = () => {
               onChange={handleChange}
               fullWidth
             />
+            <TextField
+              label="Index" 
+              name="index"
+              value={(item as AccordionControl).index} 
+              sx={{ mt: 4 }}
+              onChange={handleChange}
+              fullWidth
+            />
           </>
         );
       case ItemTypes.PAGE:
