@@ -24,8 +24,10 @@ const PageComponent: FC<PageProps> = ({ id }) => {
     setPage(pageMatch);
     if (entityNodes.length && edges.length && pageMatch) {
       const pageEdges = edges.find((e) => e.target === pageMatch?.id)
-      const entityMatch = entityNodes.find(item => item.nodeId === pageEdges.source);
-      setEntity(entityMatch);
+      if (pageEdges) {
+        const entityMatch = entityNodes.find(item => item.nodeId === pageEdges.source);
+        setEntity(entityMatch);
+      }
     }
   }, [edges, entityNodes, id, page, pages])
 
