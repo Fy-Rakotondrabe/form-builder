@@ -50,6 +50,7 @@ const DropZone: FC<DropZoneProps> = ({ page, entity, index }) => {
 }
 
 const PageComponent: FC<PageProps> = ({ id }) => {
+  const {enqueueSnackbar} = useSnackbar();
   const { pages, entityNodes, setSelectedElement, selectedElement, updatePage } = useStore();
   const [page, setPage] = useState<Page | undefined>();
   const [entity, setEntity] = useState<Entity | undefined>()
@@ -68,10 +69,12 @@ const PageComponent: FC<PageProps> = ({ id }) => {
               const control = page?.controls[controlIndex];
               setDataToCopy(control);
               setDataToCopyIndex(controlIndex);
+              enqueueSnackbar('Please select a page to paste the field and press (cmd / ctrl) + V', { preventDuplicate: true });
             }
             break;
           case 'v':
-            if (dataToCopy) {
+            if (dataToCopy && selectedElement.type === ItemTypes.PAGE) {
+              const pageDest = pages.find(p => p.id === selectedElement.id); 
               const newControl = {
                 ...dataToCopy,
                 id: uuidv4(),
@@ -82,10 +85,10 @@ const PageComponent: FC<PageProps> = ({ id }) => {
                 (newControl as AccordionControl).controls = (newControl as AccordionControl).controls.map(control => ({ ...control, id: uuidv4() }))
               }
 
-              const pageControls = [...page.controls];
+              const pageControls = [...pageDest.controls];
               pageControls.splice(dataToCopyIndex + 1, 0, newControl);
               updatePage({
-                ...page,
+                ...pageDest,
                 controls: pageControls
               })
             }
@@ -101,7 +104,7 @@ const PageComponent: FC<PageProps> = ({ id }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [dataToCopy, dataToCopyIndex, page, pages, selectedElement, setPage, setSelectedElement, updatePage]);
+  }, [dataToCopy, dataToCopyIndex, enqueueSnackbar, page, pages, selectedElement, setPage, setSelectedElement, updatePage]);
 
   useEffect(() => {
     const pageMatch = pages.find((page) => page.id === id);
