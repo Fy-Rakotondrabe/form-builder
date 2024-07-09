@@ -6,9 +6,10 @@ import { useDrop } from "react-dnd";
 import { renderControl } from "./renderControl";
 import { Box } from "@mui/material";
 import { Handle, Position } from "reactflow";
-import { Control, Entity, Field, Page } from "../model";
+import { AccordionControl, Control, Entity, Field, Page } from "../model";
 import { useFormContext } from "../context/formContext";
 import { useSnackbar } from "notistack";
+import { v4 as uuidv4 } from 'uuid';
 
 interface PageProps {
   id: string;
@@ -49,10 +50,58 @@ const DropZone: FC<DropZoneProps> = ({ page, entity, index }) => {
 }
 
 const PageComponent: FC<PageProps> = ({ id }) => {
-  const { pages, entityNodes, setSelectedElement } = useStore();
+  const { pages, entityNodes, setSelectedElement, selectedElement, updatePage } = useStore();
   const [page, setPage] = useState<Page | undefined>();
   const [entity, setEntity] = useState<Entity | undefined>()
   const { edges } = useFormContext();
+  const [dataToCopy, setDataToCopy] = useState<Control | AccordionControl | null>(null);
+  const [dataToCopyIndex, setDataToCopyIndex] = useState(-1);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Check if Ctrl or Cmd is pressed along with C or V
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key) {
+          case 'c':
+            if (selectedElement) {
+              const controlIndex = page?.controls.findIndex((item) => item.id === selectedElement.id);
+              const control = page?.controls[controlIndex];
+              setDataToCopy(control);
+              setDataToCopyIndex(controlIndex);
+            }
+            break;
+          case 'v':
+            if (dataToCopy) {
+              const newControl = {
+                ...dataToCopy,
+                id: uuidv4(),
+                label: dataToCopy.label + ' (copy)'
+              }
+
+              if (typeof dataToCopy === 'object' && 'controls' in dataToCopy) {
+                (newControl as AccordionControl).controls = (newControl as AccordionControl).controls.map(control => ({ ...control, id: uuidv4() }))
+              }
+
+              const pageControls = [...page.controls];
+              pageControls.splice(dataToCopyIndex + 1, 0, newControl);
+              updatePage({
+                ...page,
+                controls: pageControls
+              })
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dataToCopy, dataToCopyIndex, page, pages, selectedElement, setPage, setSelectedElement, updatePage]);
 
   useEffect(() => {
     const pageMatch = pages.find((page) => page.id === id);
@@ -76,10 +125,13 @@ const PageComponent: FC<PageProps> = ({ id }) => {
         <DropZone index={0} entity={entity} page={page} />
         {page?.controls.map((control, index) => (
           <>
-            <div onClick={(e) => {
-              e.stopPropagation();
-              setSelectedElement(control.id, ItemTypes.FIELD, page.id, ItemTypes.PAGE)
-            }}>
+            <div 
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedElement(control.id, ItemTypes.FIELD, page.id, ItemTypes.PAGE)
+              }}
+              className={classNames({selected: selectedElement?.id === control.id})}
+            >
               {renderControl(control as Control, page.id)}
             </div>
             <DropZone index={index + 1} entity={entity} page={page} />
