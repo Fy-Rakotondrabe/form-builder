@@ -98,7 +98,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [dataToCopy, nodes, pages, selectedElement, setNodes, setPage]);
+  }, [dataToCopy, nodes, pages, selectedElement, setNodes, setPage, setSelectedElement]);
   
   const connectionRules = useCallback((params, nodes) => {
     const { source, target } = params;
@@ -141,7 +141,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
         },
         data: {
           id,
-          ...item
+          ...item,
         },
       }
       setNodes(nodes => [...nodes, node]);
@@ -187,9 +187,13 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
   }, []);
 
   const onSaveForm = useCallback(() => {
-    const json = generateForm();
-    onSave(json);
-  }, [generateForm, onSave])  
+    try {
+      const json = generateForm();
+      onSave(json);
+    } catch (e) {
+      onError(e);
+    }
+  }, [generateForm, onError, onSave])  
 
   return (
     <div className='flowContainer'>

@@ -1,12 +1,13 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import { FC, useCallback, useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from "uuid";
 import { ItemTypes } from '../../constants/constants';
-import { AccordionControl, Control, Field } from '../../model';
+import { AccordionControl, Control, Field, Page } from '../../model';
 import { useStore } from '../../store/store';
 import { renderControl } from '../renderControl';
+import classNames from 'classnames';
 
 interface AccordionFieldProps {
   label: string;
@@ -14,27 +15,30 @@ interface AccordionFieldProps {
   pageId: string;
 }
 
-const AccordionField: FC<AccordionFieldProps> = ({
-  label,
-  id,
-  pageId,
-}) => {
-  const { pages, updatePage, setSelectedElement, setSelectedAccordionControl } = useStore();
+interface DropZoneProps {
+  id: string;
+  index: number;
+  page: Page;
+  accordion: AccordionControl;
+}
 
-  const page = useMemo(() => pages.find((item) => item.id === pageId), [pageId, pages])
-  const accordion = useMemo(() => page?.controls.find((item) => item.id === id) as AccordionControl, [id, page?.controls])
+
+const DropZone: FC<DropZoneProps> = ({ id, index, page, accordion }) => {
+  const { updatePage } = useStore();
 
   const handleAddAccordionControl = useCallback((control: Control) => {
+    const controls = [...accordion.controls];
+    controls.splice(index, 0, control)
     const newAcc: AccordionControl = {
       ...accordion,
-      controls: [...accordion.controls, control]
+      controls: controls
     }
     updatePage({
       ...page,
       controls: page?.controls.map((c) => c.id === id ? newAcc : c)
     })
-  }, [accordion, id, page, updatePage])
-  
+  }, [accordion, id, index, page, updatePage])
+
   const [{ isOverCurrent }, drop] = useDrop(() => ({
     accept: ItemTypes.FIELD,
     drop: (item: Field, monitor) => {
@@ -60,12 +64,26 @@ const AccordionField: FC<AccordionFieldProps> = ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
-  }), [pages, accordion, page]);
+  }), [accordion, page]);
+
+  return (
+    <Box ref={drop} height={16} width={'100%'} className={classNames({ "over": isOverCurrent })}></Box>
+  );
+}
+
+
+const AccordionField: FC<AccordionFieldProps> = ({
+  label,
+  id,
+  pageId,
+}) => {
+  const { pages, setSelectedElement, setSelectedAccordionControl } = useStore();
+
+  const page = useMemo(() => pages.find((item) => item.id === pageId), [pageId, pages])
+  const accordion = useMemo(() => page?.controls.find((item) => item.id === id) as AccordionControl, [id, page?.controls])
 
   return (
     <Accordion 
-      style={isOverCurrent ? { backgroundColor: 'aliceblue' } : {}} 
-      ref={drop} 
       expanded
       onClick={(e) => {
         e.stopPropagation();
@@ -76,15 +94,19 @@ const AccordionField: FC<AccordionFieldProps> = ({
         <Typography fontSize={16} fontWeight="bold">{label}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        {accordion?.controls.map((control) => (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedAccordionControl(page.id, id, control.id)
-            }}
-          >
-            {renderControl(control as Control, page.id)}
-          </div>
+        <DropZone index={0} id={id} accordion={accordion} page={page} />
+        {accordion?.controls.map((control, index) => (
+          <>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedAccordionControl(page.id, id, control.id)
+              }}
+            >
+              {renderControl(control as Control, page.id)}
+            </div>
+            <DropZone index={index + 1} id={id} accordion={accordion} page={page} />
+          </>
         ))}
       </AccordionDetails>
     </Accordion>

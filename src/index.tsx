@@ -3,14 +3,14 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { SnackbarProvider } from 'notistack';
 import { FC, useEffect } from "react";
+import 'reactflow/dist/style.css';
 import Layout from "./components/Layout";
+import { FormProvider } from './context/formContext';
+import './index.css';
 import { Entity, Form } from "./model";
 import { useStore } from "./store/store";
-import './index.css'
-import 'reactflow/dist/style.css';
-import './index.css';
-import { FormProvider } from './context/formContext';
 
 interface FormBuilderProps {
   value: Form[];
@@ -28,11 +28,13 @@ const FormBuilder: FC<FormBuilderProps> = ({ value, entities, onSave, onError })
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <DndProvider backend={HTML5Backend}>
-        <FormProvider>
-          <Layout value={value} onSave={onSave} onError={onError} />
-        </FormProvider>
-      </DndProvider>
+      <SnackbarProvider>
+        <DndProvider backend={HTML5Backend}>
+          <FormProvider>
+            <Layout value={value} onSave={onSave} onError={onError} />
+          </FormProvider>
+        </DndProvider>
+      </SnackbarProvider>
     </LocalizationProvider>
   );
 }
