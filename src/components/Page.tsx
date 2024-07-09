@@ -8,9 +8,10 @@ import { Box } from "@mui/material";
 import { Handle, Position } from "reactflow";
 import { Control, Entity, Field, Page } from "../model";
 import { useFormContext } from "../context/formContext";
+import { useSnackbar } from "notistack";
 
 interface PageProps {
-  id: string
+  id: string;
 }
 
 interface DropZoneProps {
@@ -21,6 +22,7 @@ interface DropZoneProps {
 
 const DropZone: FC<DropZoneProps> = ({ page, entity, index }) => {
   const { setPageControls } = useStore()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [{ isOverCurrent }, drop] = useDrop(() => ({
     accept: [ItemTypes.FIELD, ItemTypes.ACCORDION],
@@ -30,7 +32,7 @@ const DropZone: FC<DropZoneProps> = ({ page, entity, index }) => {
         return;
       }
       if (item.type === ItemTypes.ACCORDION && entity.displayType === 'Table') {
-        throw 'Accordion can only be drop on page connected to an entity that have a List as display type'
+        enqueueSnackbar('Accordion can only be drop on page connected to an entity that have a List as display type', { variant: 'error' })
       } else {
         setPageControls(page?.id ?? '', item, index);
       }

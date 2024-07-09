@@ -141,7 +141,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
         },
         data: {
           id,
-          ...item
+          ...item,
         },
       }
       setNodes(nodes => [...nodes, node]);
