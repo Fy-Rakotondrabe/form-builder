@@ -73,7 +73,7 @@ const ItemProperties = () => {
         break;
       case ItemTypes.ENTITY: {
         const entity = entities.find(item => item.id === value);
-        updateEntityNode(selectedElement?.id, {...entity, ...data, nodeId: selectedElement?.id});
+        updateEntityNode(selectedElement?.id, {...entity, displayType: data.displayType, nodeId: selectedElement?.id});
         break;
       }
       default:
