@@ -6,6 +6,11 @@ const selectFormat = [
   {label: 'Multiple choice', value: 'multiple'}
 ]
 
+const textFormat = [
+  {label: 'Short', value: 'short'},
+  {label: 'Multiline', value: 'multi-line'}
+]
+
 export function renderSetting(
   control: Control,
   handleChange: (e: React.ChangeEvent<any>) => void,
@@ -25,7 +30,69 @@ export function renderSetting(
 
   switch (type) {
     case 'text':
+      return (
+        <>
+          <Typography>Text</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControl fullWidth sx={{ mt: 3 }}>
+            <InputLabel id="format">Format</InputLabel>
+            <Select
+              value={format}
+              labelId="format"
+              onChange={handleChange}
+              fullWidth
+              name="format"
+              label="Format"
+              placeholder="Format"
+            >
+              {textFormat.map((format) => (
+                <MenuItem value={format.value}>{format.label}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     case 'markdown':
+      return (
+        <>
+          <Typography>Markdown</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
+          />
+        </>
+      );
     case 'checkbox':
       return (
         <>
@@ -47,6 +114,16 @@ export function renderSetting(
               />
             }  
             label="Value" 
+          />
+          <FormControlLabel  
+            sx={{ mt: 2 }}
+            control={
+              <Checkbox 
+                checked={!!required} 
+                onChange={(e) => handleChange({ target: { name: 'required', value: e.target.checked } } as any)}
+              />
+            }  
+            label="Required" 
           />
         </>
       );
