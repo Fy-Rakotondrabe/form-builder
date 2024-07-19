@@ -207,6 +207,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
           nodeTypes={nodeTypes}
           attributionPosition="top-right"
           zoomOnScroll={false}
+          disableKeyboardA11y
           onNodesDelete={(nodes) => handleNodeDelete(nodes[0])}
           onMoveEnd={onMoveEnd}
         >
