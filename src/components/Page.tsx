@@ -59,6 +59,26 @@ const PageComponent: FC<PageProps> = ({ id }) => {
   const [dataToCopyIndex, setDataToCopyIndex] = useState(-1);
 
   useEffect(() => {
+    const moveControl = (direction) => {
+      if (!selectedElement) return;
+
+      const controlIndex = page?.controls.findIndex((item) => item.id === selectedElement.id);
+      if (controlIndex === -1) return;
+
+      const newIndex = controlIndex + direction;
+      if (newIndex < 0 || newIndex >= page.controls.length) return;
+
+      const newControls = [...page.controls];
+      const [movedControl] = newControls.splice(controlIndex, 1);
+      newControls.splice(newIndex, 0, movedControl);
+
+      updatePage({
+        ...page,
+        controls: newControls
+      });
+
+      // setSelectedElement(movedControl);
+    };
     const handleKeyDown = (event) => {
       // Check if Ctrl or Cmd is pressed along with C or V
       if (event.ctrlKey || event.metaKey) {
@@ -85,13 +105,23 @@ const PageComponent: FC<PageProps> = ({ id }) => {
                 (newControl as AccordionControl).controls = (newControl as AccordionControl).controls.map(control => ({ ...control, id: uuidv4() }))
               }
 
-              const pageControls = [...pageDest.controls];
-              pageControls.splice(dataToCopyIndex + 1, 0, newControl);
+              const pageControls = [...pageDest.controls, newControl];
               updatePage({
                 ...pageDest,
                 controls: pageControls
               })
             }
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (event.key) {
+          case 'ArrowUp':
+            moveControl(-1);
+            break;
+          case 'ArrowDown':
+            moveControl(1);
             break;
           default:
             break;
