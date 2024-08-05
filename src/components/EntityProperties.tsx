@@ -24,7 +24,6 @@ const EntityProperties: FC<EntityPropertiesProps> = ({
 
     const pageEdgesTarget = edges.filter(edge => edge.source === item.nodeId).map(e => e.target);
     const matchPages = pages.filter(p => pageEdgesTarget.includes(p.id));
-    console.log(pageEdgesTarget)
     matchPages.forEach(page => {
       updatePage({
         ...page,
