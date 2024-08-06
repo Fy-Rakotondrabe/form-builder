@@ -2,7 +2,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import { Control, Entity } from '../model';
 import { FC, useCallback, useState } from 'react';
 import { useStore } from '../store/store';
-import { ItemTypes } from '../constants/constants';
+import { DisplayType, ItemTypes } from '../constants/constants';
 import { useFormContext } from '../context/formContext';
 
 interface EntityPropertiesProps {
@@ -70,7 +70,7 @@ const EntityProperties: FC<EntityPropertiesProps> = ({
           label="Display Type"
           labelId="type"
         >
-          {["Table", "List"].map((entity) => (
+          {[DisplayType.TABLE, DisplayType.LIST].map((entity) => (
             <MenuItem value={entity}>{entity}</MenuItem>
           ))}
         </Select>

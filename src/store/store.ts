@@ -91,7 +91,7 @@ export const useStore = create<StoreProps>((set, get) => ({
     set((state) => ({ ...state, entityNodes: state.entityNodes.map((e) => e.nodeId === id ? {...e, ...entityNode} : e) }))
   },
   removeEntityNode: (id: string) => {
-    set((state) => ({ ...state, entityNodes: state.entityNodes.filter((e) => e.id !== id) }))
+    set((state) => ({ ...state, entityNodes: state.entityNodes.filter((e) => e.nodeId !== id) }))
   },
   resetSelected: () => {
     set((state) => ({ ...state, selectedElement: null }))

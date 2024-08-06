@@ -22,7 +22,8 @@ export const FieldTypes = {
   PHOTO: 'photo',
   CALCULATED: 'calculated',
   READING: 'reading',
-  ACCORDION: 'accordion'
+  ACCORDION: 'accordion',
+  DIVIDER: 'divider',
 }
 
 export const Nodes: Field[] = [
@@ -94,15 +95,19 @@ export const Fields: Field[] = [
     label: 'Checkbox',
     elementType: ItemTypes.FIELD,
   },
-    {
+  {
     type: FieldTypes.ACCORDION,
     label: 'Accordion',
     elementType: ItemTypes.ACCORDION,
   },
-  // {
-  //   type: FieldTypes.READING,
-  //   label: 'Reading',
-  //   elementType: ItemTypes.FIELD,
-  // }
+  {
+    type: FieldTypes.DIVIDER,
+    label: 'Divider',
+    elementType: ItemTypes.FIELD,
+  },
 ]
 
+export const DisplayType = {
+  TABLE: 'Table',
+  LIST: 'List'
+}
