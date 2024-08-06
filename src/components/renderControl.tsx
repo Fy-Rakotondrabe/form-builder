@@ -9,6 +9,7 @@ import SelectComponent from './fields/Select';
 import TextField from './fields/TextField';
 import { Control } from '../model';
 import AccordionField from './fields/AccordionField';
+import DividerComponent from './DividerComponent';
 
 export function renderControl(
   control: Control,
@@ -118,6 +119,8 @@ export function renderControl(
           id={id}
         />
       );
+    case 'divider':
+      return <DividerComponent label={label} />
     default:
       return null;
   }

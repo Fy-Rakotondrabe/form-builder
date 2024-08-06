@@ -91,3 +91,22 @@
   top: 50%;
   left: 45%;
 }
+
+.dashed-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.dashed-divider::before,
+.dashed-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px dashed #000;
+  margin: 0 10px;
+}
+
+.dashed-divider span {
+  white-space: nowrap;
+}

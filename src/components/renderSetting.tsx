@@ -246,7 +246,6 @@ export function renderSetting(
         </>
       );
     case 'choice':
-      console.log(format)
       return (
         <>
           <Typography>Multiple Choice</Typography>
@@ -406,6 +405,20 @@ export function renderSetting(
               />
             }  
             label="Required" 
+          />
+        </>
+      );
+    case 'divider':
+      return (
+        <>
+          <Typography>Divider</Typography>
+          <TextField
+            label="Label" 
+            name="label"
+            value={label} 
+            sx={{ mt: 4 }}
+            onChange={handleChange}
+            fullWidth
           />
         </>
       );
