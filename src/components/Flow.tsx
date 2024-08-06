@@ -64,6 +64,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
               const name = dataToCopy.pageName + ' (copy)'
               setPage({
                 ...dataToCopy,
+                controls: dataToCopy.controls.map(c => ({ ...c, id: uuidv4() })),
                 id,
                 pageName: name,
                 index: dataToCopy.index + 1
