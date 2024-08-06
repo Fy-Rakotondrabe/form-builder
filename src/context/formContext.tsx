@@ -124,6 +124,7 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
   const generateForm = useCallback(() => {
     const formsData: Form[] = [];
     try {
+      console.log(entityNodes)
       entityNodes.forEach((entity) => {
         const entityNode = nodes.find(item => item.id === entity.nodeId);
 
@@ -149,6 +150,7 @@ const FormProvider: FC<{children: ReactNode}> = ({ children }) => {
       })
       return formsData
     } catch (e) {
+      console.log(e)
       throw('Close all nodes before saving (Entity -> Form -> Pages)');
     }
   }, [edges, entityNodes, nodes, pages])

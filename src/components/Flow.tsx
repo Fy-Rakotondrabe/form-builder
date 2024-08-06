@@ -10,7 +10,7 @@ import ReactFlow, {
   addEdge,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
-import { ItemTypes } from '../constants/constants';
+import { DisplayType, ItemTypes } from '../constants/constants';
 import { useFormContext } from '../context/formContext';
 import { Field, Form, Page } from '../model';
 import { useStore } from '../store/store';
@@ -160,7 +160,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
           break;
         }
         case ItemTypes.ENTITY:
-          setEntityNode({...entity, nodeId: id});
+          setEntityNode({...entity, displayType: DisplayType.LIST, nodeId: id});
           break;
       }
       setSelectedElement(id, item.type, null, null)

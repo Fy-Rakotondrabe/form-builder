@@ -107,3 +107,7 @@ export const Fields: Field[] = [
   },
 ]
 
+export const DisplayType = {
+  TABLE: 'Table',
+  LIST: 'List'
+}
