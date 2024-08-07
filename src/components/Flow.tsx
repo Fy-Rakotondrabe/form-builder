@@ -67,7 +67,7 @@ const FlowSection: FC<FlowSectionProps> = ({ onSave, onError }) => {
                 controls: dataToCopy.controls.map(c => ({ ...c, id: uuidv4() })),
                 id,
                 pageName: name,
-                index: dataToCopy.index + 1
+                index: Math.max(...pages.map(p => p.index)) + 1
               })
 
               const pageNode = nodes.find((item) => item.id === dataToCopy.id);
