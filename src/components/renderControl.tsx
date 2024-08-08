@@ -103,6 +103,7 @@ export function renderControl(
         <ImageInput
           type={'basic'}
           value={value}
+          label={label}
         />
       );
     case 'calculated':
